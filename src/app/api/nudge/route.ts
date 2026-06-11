@@ -68,7 +68,7 @@ export async function POST(req: Request) {
     const nudgeResult = await getAiNudge(
       category,
       subType,
-      parseFloat(quantity),
+      quantity,
       unit,
       weeklyPattern
     );

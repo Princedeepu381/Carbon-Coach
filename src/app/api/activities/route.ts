@@ -162,7 +162,7 @@ export async function POST(req: Request) {
         userId,
         category,
         subType,
-        quantity: parseFloat(quantity),
+        quantity,
         unit,
         co2Kg: co2,
         nudgeShown: !!nudgeShown,
