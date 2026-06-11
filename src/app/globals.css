@@ -1,0 +1,236 @@
+/* src/app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Base Backgrounds (Soft Nature Pastels) */
+    --bg-base: #e4eee1;       /* Soft mint-sage backdrop */
+    --bg-deeper: #cfdfca;     /* moss-recessed bento gutter */
+
+    /* Glass surfaces re-mapped to Claymorphism surfaces */
+    --glass-bg: #f1f6f0;      /* Cream-mint clay card base */
+    --glass-bg-hover: #eaf1e8;
+    --glass-border: rgba(255, 255, 255, 0.95); /* High-contrast white clay edge */
+    --glass-blur: 0px;
+
+    /* Color Accents (Tactile Clay) */
+    --accent-green: #2d5e29;  /* Deeper nature green */
+    --accent-green-glow: rgba(54, 106, 50, 0.12);
+    --accent-blue: #326295;
+    --accent-amber: #b56c07;
+    --accent-red: #c22e2e;
+
+    /* Typography Color Stops */
+    --text-primary: #1b261a;
+    --text-secondary: #3d4f3b;
+    --text-muted: #627560;
+
+    /* Orb color stops (3D Clay Spheres) */
+    --orb-thriving: #4ade80;
+    --orb-neutral: #fef08a;
+    --orb-stressed: #fed7aa;
+    --orb-critical: #fecaca;
+  }
+}
+
+/* Custom Claymorphism Layers mapped from glass panels to prevent breaking existing classes */
+
+.glass-panel-l1 {
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 24px;
+  box-shadow: 
+    6px 6px 12px rgba(165, 180, 160, 0.15),
+    -6px -6px 12px rgba(255, 255, 255, 0.95),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.8),
+    inset -3px -3px 6px rgba(165, 180, 160, 0.08);
+}
+
+.glass-panel-l2 {
+  background: #ffffff;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  border-radius: 28px;
+  box-shadow: 
+    8px 8px 16px rgba(165, 180, 160, 0.2),
+    -8px -8px 16px rgba(255, 255, 255, 0.95),
+    inset 5px 5px 10px rgba(255, 255, 255, 0.9),
+    inset -5px -5px 10px rgba(165, 180, 160, 0.12);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Claymorphism hover feedback */
+.glass-panel-l2:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    10px 10px 20px rgba(165, 180, 160, 0.25),
+    -10px -10px 20px rgba(255, 255, 255, 0.95),
+    inset 6px 6px 12px rgba(255, 255, 255, 0.95),
+    inset -6px -6px 12px rgba(165, 180, 160, 0.15);
+}
+
+/* Active navigation item highlight (Clay pressed/recessed) */
+.active-orb {
+  background: #e3f2e4 !important;
+  color: #265422 !important;
+  box-shadow: 
+    inset 4px 4px 8px rgba(45, 90, 40, 0.15),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.8),
+    0 2px 4px rgba(165, 180, 160, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Frosted horizontal etching separators remapped to soft clay valleys */
+.frosted-etching {
+  border-bottom: 2px solid #edf2eb;
+}
+
+/* Rich Organic text gradient */
+.prismatic-text {
+  background: linear-gradient(135deg, #275422 0%, #326295 100%);
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-weight: 800;
+}
+
+/* Clay buttons styling */
+.clay-btn {
+  font-weight: 800;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  user-select: none;
+}
+
+.clay-btn-primary {
+  background: #366a32;
+  color: #ffffff !important;
+  box-shadow: 
+    4px 4px 10px rgba(54, 106, 50, 0.2),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.35),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.clay-btn-primary:hover {
+  background: #407d3b;
+  box-shadow: 
+    6px 6px 14px rgba(54, 106, 50, 0.25),
+    inset 4px 4px 8px rgba(255, 255, 255, 0.45),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.35);
+  transform: scale(1.02);
+}
+
+.clay-btn-primary:active {
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.4),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.15);
+  transform: scale(0.97);
+}
+
+.clay-btn-secondary {
+  background: #ffffff;
+  color: #366a32 !important;
+  box-shadow: 
+    4px 4px 8px rgba(165, 180, 160, 0.12),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.95),
+    inset -3px -3px 6px rgba(165, 180, 160, 0.15);
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+}
+
+.clay-btn-secondary:hover {
+  background: #fcfdfb;
+  transform: scale(1.02);
+}
+
+.clay-btn-secondary:active {
+  box-shadow: 
+    inset 3px 3px 6px rgba(165, 180, 160, 0.2),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.5);
+  transform: scale(0.97);
+}
+
+/* Recessed bento slot inputs */
+.clay-input {
+  background: #fbfcfb !important;
+  border-radius: 20px;
+  box-shadow: 
+    inset 3px 3px 6px rgba(165, 180, 160, 0.12),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.85);
+  border: 1.5px solid #e2e8f0 !important;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  color: #1b261a !important;
+}
+
+.clay-input:focus {
+  border-color: #366a32 !important;
+  box-shadow: 
+    inset 3px 3px 6px rgba(165, 180, 160, 0.12),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.85),
+    0 0 0 3px rgba(54, 106, 50, 0.15) !important;
+}
+
+/* Custom Scrollbars (Hidden but scrollable) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Custom clay colored cards */
+.clay-card-green {
+  background: #e3f2e4;
+  border-radius: 24px;
+  box-shadow: 
+    6px 6px 12px rgba(165, 180, 160, 0.15),
+    -6px -6px 12px rgba(255, 255, 255, 0.9),
+    inset 4px 4px 8px rgba(255, 255, 255, 0.7),
+    inset -4px -4px 8px rgba(45, 90, 40, 0.12);
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  color: #1e4620;
+}
+
+.clay-card-blue {
+  background: #e0f2fe;
+  border-radius: 24px;
+  box-shadow: 
+    6px 6px 12px rgba(165, 180, 160, 0.15),
+    -6px -6px 12px rgba(255, 255, 255, 0.9),
+    inset 4px 4px 8px rgba(255, 255, 255, 0.7),
+    inset -4px -4px 8px rgba(30, 64, 175, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  color: #1e3a8a;
+}
+
+.clay-card-amber {
+  background: #fef3c7;
+  border-radius: 24px;
+  box-shadow: 
+    6px 6px 12px rgba(165, 180, 160, 0.15),
+    -6px -6px 12px rgba(255, 255, 255, 0.9),
+    inset 4px 4px 8px rgba(255, 255, 255, 0.7),
+    inset -4px -4px 8px rgba(180, 83, 9, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  color: #78350f;
+}
+
+.clay-card-red {
+  background: #fee2e2;
+  border-radius: 24px;
+  box-shadow: 
+    6px 6px 12px rgba(165, 180, 160, 0.15),
+    -6px -6px 12px rgba(255, 255, 255, 0.9),
+    inset 4px 4px 8px rgba(255, 255, 255, 0.7),
+    inset -4px -4px 8px rgba(185, 28, 28, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  color: #7f1d1d;
+}

@@ -1,0 +1,24 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: carboncoach
+  labels:
+    cloud.googleapis.com/location: us-central1
+spec:
+  template:
+    spec:
+      containers:
+        - image: gcr.io/your-gcp-project/carboncoach:latest
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: 1000m
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              value: "file:/app/prisma/carboncoach.db"
+            - name: NEXT_PUBLIC_APP_URL
+              value: "http://localhost:3000"
+            - name: GEMINI_API_KEY
+              value: "your_google_gemini_api_key_here"

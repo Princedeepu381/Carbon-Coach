@@ -1,0 +1,77 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String   @id @default(uuid())
+  name             String
+  avatarSeed       String   @default("")
+  createdAt        DateTime @default(now())
+  weeklyGoalKg     Float    @default(50.0)
+  notificationPref String   @default("{}")
+  activities       Activity[]
+  streaks          Streak[]
+  worldSnapshots   WorldSnapshot[]
+}
+
+model Activity {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category      String
+  subType       String
+  quantity      Float
+  unit          String
+  co2Kg         Float
+  loggedAt      DateTime  @default(now())
+  nudgeShown    Boolean   @default(false)
+  nudgeAccepted Boolean   @default(false)
+  aiNudges      AiNudge[]
+
+  @@index([userId, loggedAt])
+  @@index([category, loggedAt])
+}
+
+model AiNudge {
+  id           String   @id @default(uuid())
+  activityId   String
+  activity     Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  triggerPhase String
+  currentCo2   Float
+  altCo2       Float
+  altLabel     String
+  message      String
+  createdAt    DateTime @default(now())
+}
+
+model Streak {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          String
+  currentStreak Int      @default(0)
+  longestStreak Int      @default(0)
+  lastUpdated   DateTime @default(now())
+}
+
+model WorldSnapshot {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  snapshotDate DateTime
+  totalCo2Kg   Float
+  treeCount    Int      @default(5)
+  skyPollution Float    @default(0.3)
+  worldMood    String   @default("neutral")
+  computedAt   DateTime @default(now())
+
+  @@unique([userId, snapshotDate])
+  @@index([userId, snapshotDate])
+}
