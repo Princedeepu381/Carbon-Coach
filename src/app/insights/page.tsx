@@ -25,9 +25,9 @@ export default function InsightsPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [insights, setInsights] = useState<any>(null);
 
-  const weeklyCounter = useCountUp(insights?.weeklyTotal || 0, { duration: 2000, decimals: 1 });
-  const dailyCounter = useCountUp(insights?.weeklyTotal ? insights.weeklyTotal / 7 : 0, { duration: 2000, decimals: 1 });
-  const streakCounter = useCountUp(insights?.streak || 0, { duration: 1500, decimals: 0 });
+  const { start: startWeekly, formattedCount: weeklyFormattedCount } = useCountUp(insights?.weeklyTotal || 0, { duration: 2000, decimals: 1 });
+  const { start: startDaily, formattedCount: dailyFormattedCount } = useCountUp(insights?.weeklyTotal ? insights.weeklyTotal / 7 : 0, { duration: 2000, decimals: 1 });
+  const { start: startStreak, formattedCount: streakFormattedCount } = useCountUp(insights?.streak || 0, { duration: 1500, decimals: 0 });
 
   useEffect(() => {
     const savedId = localStorage.getItem("carboncoach_user_id") || "demo-user-id";
@@ -43,11 +43,11 @@ export default function InsightsPage() {
 
   useEffect(() => {
     if (insights) {
-      weeklyCounter.start();
-      dailyCounter.start();
-      streakCounter.start();
+      startWeekly();
+      startDaily();
+      startStreak();
     }
-  }, [insights]);
+  }, [insights, startWeekly, startDaily, startStreak]);
 
   const fetchInsights = async (uid: string) => {
     try {
@@ -219,7 +219,7 @@ export default function InsightsPage() {
             </motion.div>
           </div>
           <div className="text-4xl font-black text-[#1b261a] font-display mb-2">
-            {weeklyCounter.formattedCount} kg
+            {weeklyFormattedCount} kg
           </div>
           <AnimatedProgress
             value={weeklyTotal}
@@ -247,7 +247,7 @@ export default function InsightsPage() {
             </motion.div>
           </div>
           <div className="text-4xl font-black text-[#1b261a] font-display mb-2">
-            {dailyCounter.formattedCount} kg
+            {dailyFormattedCount} kg
           </div>
           <p className="text-[10px] text-on-surface-variant font-bold">
             Target: {(weeklyGoal / 7).toFixed(1)} kg/day
@@ -268,7 +268,7 @@ export default function InsightsPage() {
             </motion.div>
           </div>
           <div className="text-4xl font-black text-[#1b261a] font-display mb-2">
-            {streakCounter.formattedCount} days
+            {streakFormattedCount} days
           </div>
           <p className="text-[10px] text-on-surface-variant font-bold">
             Keep logging daily to maintain your streak!

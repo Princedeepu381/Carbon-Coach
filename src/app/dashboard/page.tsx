@@ -44,8 +44,8 @@ function DashboardContent() {
 
   // Animation triggers
   const { ref: statsRef, inView: statsInView } = useScrollReveal();
-  const emissionsCounter = useCountUp(todayEmissions, { duration: 2000, decimals: 1 });
-  const streakCounter = useCountUp(streakCount, { duration: 1500, decimals: 0 });
+  const { start: startEmissions, formattedCount: emissionsFormattedCount } = useCountUp(todayEmissions, { duration: 2000, decimals: 1 });
+  const { start: startStreak, formattedCount: streakFormattedCount } = useCountUp(streakCount, { duration: 1500, decimals: 0 });
 
   // Load session & fetch initial data
   useEffect(() => {
@@ -67,10 +67,10 @@ function DashboardContent() {
 
   useEffect(() => {
     if (statsInView) {
-      emissionsCounter.start();
-      streakCounter.start();
+      startEmissions();
+      startStreak();
     }
-  }, [statsInView]);
+  }, [statsInView, startEmissions, startStreak]);
 
   const fetchDashboardData = async (uid: string, goal: number) => {
     try {
@@ -283,7 +283,7 @@ function DashboardContent() {
                 >
                   <Flame className="w-5 h-5 text-amber-500 fill-amber-500" />
                 </motion.div>
-                <div className="text-2xl font-black text-amber-600 font-display">{streakCounter.formattedCount}</div>
+                <div className="text-2xl font-black text-amber-600 font-display">{streakFormattedCount}</div>
               </div>
               <div className="text-[10px] font-bold text-gray-600 uppercase tracking-wider mt-1">Day Streak</div>
             </div>
@@ -391,7 +391,7 @@ function DashboardContent() {
               transition={{ duration: 0.6, type: "spring" }}
               className={`text-3xl font-black font-display ${cardStyle.text}`}
             >
-              {emissionsCounter.formattedCount}
+              {emissionsFormattedCount}
               <span className="text-sm font-bold opacity-70 ml-1">kg CO₂</span>
             </motion.div>
             <p className={`text-[10px] font-bold mt-1 ${cardStyle.textMuted}`}>
@@ -428,7 +428,7 @@ function DashboardContent() {
                 className="text-center"
               >
                 <div className={`text-lg font-black font-display ${cardStyle.text}`}>
-                  {streakCounter.formattedCount}
+                  {streakFormattedCount}
                 </div>
                 <div className="text-[9px] font-bold text-on-surface-variant uppercase tracking-wider">Days Active</div>
               </motion.div>

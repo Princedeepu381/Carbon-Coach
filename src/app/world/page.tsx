@@ -27,8 +27,8 @@ export default function MyWorldPage() {
   const [zoomLevel, setZoomLevel] = useState<number>(1);
 
   // Animated counters
-  const co2Counter = useCountUp(selectedSnapshot?.totalCo2Kg || 0, { duration: 1500, decimals: 1 });
-  const treeCounter = useCountUp(selectedSnapshot?.treeCount || 0, { duration: 1500, decimals: 0 });
+  const { start: startCo2, count: co2Count, formattedCount: formattedCo2 } = useCountUp(selectedSnapshot?.totalCo2Kg || 0, { duration: 1500, decimals: 1 });
+  const { start: startTree, count: treeCount, formattedCount: formattedTree } = useCountUp(selectedSnapshot?.treeCount || 0, { duration: 1500, decimals: 0 });
 
   useEffect(() => {
     const savedId = localStorage.getItem("carboncoach_user_id") || "demo-user-id";
@@ -41,10 +41,10 @@ export default function MyWorldPage() {
 
   useEffect(() => {
     if (selectedSnapshot) {
-      co2Counter.start();
-      treeCounter.start();
+      startCo2();
+      startTree();
     }
-  }, [selectedSnapshot]);
+  }, [selectedSnapshot, startCo2, startTree]);
 
   const fetchWorldData = async (uid: string) => {
     try {
@@ -362,12 +362,12 @@ export default function MyWorldPage() {
               Logged Carbon
             </span>
             <motion.span
-              key={co2Counter.count}
+              key={co2Count}
               initial={{ scale: 1.2, color: "#22c55e" }}
               animate={{ scale: 1, color: "#1b261a" }}
               className="text-base font-black font-display leading-none block"
             >
-              {co2Counter.formattedCount} kg
+              {formattedCo2} kg
             </motion.span>
           </div>
           <div>
@@ -375,12 +375,12 @@ export default function MyWorldPage() {
               Tree Count
             </span>
             <motion.span
-              key={treeCounter.count}
+              key={treeCount}
               initial={{ scale: 1.2, color: "#22c55e" }}
               animate={{ scale: 1, color: "#2d5e29" }}
               className="text-base font-black text-primary font-display leading-none block"
             >
-              {treeCounter.formattedCount} 🌲
+              {formattedTree} 🌲
             </motion.span>
           </div>
         </div>

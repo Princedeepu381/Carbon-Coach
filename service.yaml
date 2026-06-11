@@ -8,7 +8,7 @@ spec:
   template:
     spec:
       containers:
-        - image: gcr.io/your-gcp-project/carboncoach:latest
+        - image: gcr.io/carbon-coach-499117/carboncoach:latest
           resources:
             limits:
               memory: 1Gi

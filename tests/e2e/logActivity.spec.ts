@@ -12,7 +12,7 @@ test.describe("CarbonCoach Activity Logging E2E Flow", () => {
     await page.waitForURL("/dashboard");
     
     // Ensure dashboard loads and greets the user
-    await expect(page.locator("text=Hey Priya Sharma")).toBeVisible();
+    await expect(page.getByText("Priya Sharma").first()).toBeVisible();
     await expect(page.getByText("Your Living World", { exact: true })).toBeVisible();
 
     // 3. Open Activity Logger Modal

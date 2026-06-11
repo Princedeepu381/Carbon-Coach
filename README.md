@@ -239,7 +239,7 @@ MIT License - See LICENSE file for details
 
 ## 👨‍💻 Author
 
-Built with ❤️ by Bob (AI Assistant) for the AI Hackathon 2026
+Built with ❤️ by Princedeepu381 for the AI Hackathon 2026
 
 ## 🙏 Acknowledgments
 

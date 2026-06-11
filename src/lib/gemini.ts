@@ -64,7 +64,7 @@ export async function getAiNudge(
             },
             required: ["co2_estimate", "alternative", "alternative_co2", "saving", "nudge_message", "show_nudge"]
           }
-        }
+        } as any
       });
 
       const text = response.response.text();

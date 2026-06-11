@@ -11,11 +11,11 @@ const rateLimitMap = new Map<string, RateLimitRecord>();
 // Clean up old entries every 5 minutes
 setInterval(() => {
   const now = Date.now();
-  for (const [key, record] of rateLimitMap.entries()) {
+  rateLimitMap.forEach((record, key) => {
     if (now > record.resetTime) {
       rateLimitMap.delete(key);
     }
-  }
+  });
 }, 5 * 60 * 1000);
 
 export interface RateLimitResult {

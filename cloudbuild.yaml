@@ -32,13 +32,13 @@ steps:
       - 'managed'
       - '--allow-unauthenticated'
       - '--set-env-vars'
-      - 'NODE_ENV=production,NEXT_PUBLIC_APP_URL=https://carboncoach-[PROJECT_ID].run.app'
+      - 'NODE_ENV=production,NEXT_PUBLIC_APP_URL=https://carboncoach-carbon-coach-499117.run.app'
 
 images:
   - 'gcr.io/$PROJECT_ID/carboncoach:$COMMIT_SHA'
 
 options:
   machineType: 'N1_HIGHCPU_8'
-  timeout: '1200s'
+timeout: '1200s'
 
 # Made with Bob
