@@ -162,23 +162,35 @@ Daily CO₂ / Daily Goal = Ratio
 - **Engagement:** Daily streak tracking
 - **Community:** Collective savings visualization
 
-## 🔒 Security Considerations
+## 🔒 Security & Performance Considerations
 
-- Input validation with Zod schemas
-- Rate limiting on API endpoints
-- Secure session management
-- Environment variable protection
-- SQL injection prevention (Prisma ORM)
+- **Robust Input Validation:** Strictly enforced using Zod schemas on both frontend forms and backend API routes.
+- **In-Memory Rate Limiting:** Implemented a robust rate limiter (`src/lib/rateLimit.ts`) protecting backend endpoints `/api/*` (activities, nudge, streaks, world) from API abuse and excessive Gemini API calls. Logs IP-based request limits (10 requests/minute) and automatically purges old records every 5 minutes.
+- **Client Render Optimizations:** Resolved React Hook dependency (`react-hooks/exhaustive-deps`) warnings inside page routes and custom forms to prevent unnecessary rendering passes.
+- **SQL Injection Prevention:** Structured queries handled exclusively via Prisma ORM.
+- **Environment Separation:** API keys and database parameters separated into `.env` configurations.
 
-## 🧪 Testing
+## ☁️ Google Cloud Deployment (Cloud Run)
 
-```bash
-# Unit tests
-npm test
+CarbonCoach is configured for continuous delivery and containerized deployment to Google Cloud Run:
+- **`Dockerfile`**: A multi-stage production Docker build optimized for Next.js.
+- **`cloudbuild.yaml`**: Standard Google Cloud Build workflow detailing compilation, image building (stored in Google Container Registry), and automated deployment.
+- **`service.yaml`**: Knative Service specification outlining resource configurations (1Gi RAM, 1 CPU limits) and routing parameters for Cloud Run.
 
-# E2E tests
-npm run test:e2e
-```
+## 🧪 Testing Suite
+
+- **Unit Testing:** Runs local component and utility test suites:
+  ```bash
+  npm test
+  ```
+- **End-to-End Testing:** Integrates Playwright E2E tests (`tests/e2e/logActivity.spec.ts`) validating complete user workflows:
+  - User Login flow
+  - Activity Logging panel accessibility
+  - Dynamic AI Coach Nudge cards
+  - Switch-to-Green recommendation triggers and database persistence
+  ```bash
+  npx playwright test
+  ```
 
 ## 📦 Project Structure
 
@@ -187,21 +199,26 @@ carbon-coach/
 ├── src/
 │   ├── app/              # Next.js pages & API routes
 │   ├── components/       # React components
-│   │   ├── Animated/     # Animation components
-│   │   ├── Dashboard/    # Dashboard widgets
-│   │   ├── Landing/      # Landing page sections
-│   │   ├── LivingWorld/  # World visualization
-│   │   └── LogForm/      # Activity logging
-│   └── lib/              # Utilities & logic
-│       ├── animations/   # Animation constants
-│       ├── computeWorld.ts  # World state logic
-│       ├── emissionFactors.ts  # CO₂ calculations
-│       ├── gemini.ts     # AI integration
-│       └── prisma.ts     # Database client
+│   │   ├── Animated/     # Claymorphism & animation wrappers
+│   │   ├── Dashboard/    # Statistics & chart widgets
+│   │   ├── Landing/      # Dynamic parallax landing sections
+│   │   ├── LivingWorld/  # World canvas & carbon orb
+│   │   └── LogForm/      # Forms & AI nudge cards
+│   └── lib/              # Utilities & middleware
+│       ├── animations/   # Animation hooks & parameters
+│       ├── computeWorld.ts  # Forest state compiler
+│       ├── emissionFactors.ts  # Carbon footprint coefficients
+│       ├── gemini.ts     # Multi-model cascade Gemini client
+│       ├── rateLimit.ts  # In-memory IP rate limiter
+│       └── prisma.ts     # Database connection client
+├── tests/
+│   └── e2e/              # Playwright E2E test scripts
 ├── prisma/
-│   ├── schema.prisma     # Database schema
-│   └── seed.ts           # Demo data
-└── public/               # Static assets
+│   ├── schema.prisma     # Prisma database schema
+│   └── seed.ts           # SQLite mock seeding data
+├── cloudbuild.yaml       # GCP automated build pipeline
+├── service.yaml          # Knative Cloud Run container configurations
+└── Dockerfile            # Multi-stage production container instructions
 ```
 
 ## 🌟 Key Innovations
