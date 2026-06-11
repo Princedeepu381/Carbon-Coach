@@ -1,13 +1,30 @@
 // src/app/api/streaks/route.ts
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rateLimit";
+import { streakSchema, userIdQuerySchema } from "@/lib/validation";
 
 export async function GET(req: Request) {
+  // Rate Limiting
+  const ip = req.headers.get("x-forwarded-for")?.split(',')[0].trim() || req.headers.get("x-real-ip") || "unknown";
+  const limitResult = rateLimit(ip, 30, 60000); // 30 requests per minute
+  if (!limitResult.success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
 
-  if (!userId) {
-    return NextResponse.json({ error: "Missing userId" }, { status: 400 });
+  // Input Validation
+  const validationResult = userIdQuerySchema.safeParse({ userId });
+  if (!validationResult.success) {
+    return NextResponse.json(
+      { error: "Invalid input", details: validationResult.error.errors },
+      { status: 400 }
+    );
   }
 
   try {
@@ -27,6 +44,16 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  // Rate Limiting
+  const ip = req.headers.get("x-forwarded-for")?.split(',')[0].trim() || req.headers.get("x-real-ip") || "unknown";
+  const limitResult = rateLimit(ip, 30, 60000); // 30 requests per minute
+  if (!limitResult.success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   try {
     let body;
     try {
@@ -35,11 +62,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid or empty JSON body" }, { status: 400 });
     }
 
-    const { userId, type } = body;
-
-    if (!userId || !type) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    // Input Validation
+    const validationResult = streakSchema.safeParse(body);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { error: "Invalid input", details: validationResult.error.errors },
+        { status: 400 }
+      );
     }
+
+    const { userId, type } = validationResult.data;
 
     // Check if streak exists
     const existingStreak = await prisma.streak.findFirst({

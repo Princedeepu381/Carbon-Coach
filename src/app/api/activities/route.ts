@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { calculateEmission, CategoryType } from "@/lib/emissionFactors";
 import { computeWorldState } from "@/lib/computeWorld";
 import { getWeeklyInsight } from "@/lib/gemini";
+import { rateLimit } from "@/lib/rateLimit";
+import { activitySchema } from "@/lib/validation";
 
 // GET activities, weekly totals, streaks, and AI insight
 export async function GET(req: Request) {
@@ -122,6 +124,16 @@ export async function GET(req: Request) {
 
 // POST log activity
 export async function POST(req: Request) {
+  // Rate Limiting
+  const ip = req.headers.get("x-forwarded-for")?.split(',')[0].trim() || req.headers.get("x-real-ip") || "unknown";
+  const limitResult = rateLimit(ip, 30, 60000); // 30 requests per minute
+  if (!limitResult.success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   try {
     let body;
     try {
@@ -129,14 +141,20 @@ export async function POST(req: Request) {
     } catch (e) {
       return NextResponse.json({ error: "Invalid or empty JSON body" }, { status: 400 });
     }
-    const { userId, category, subType, quantity, unit, nudgeShown, nudgeAccepted } = body;
 
-    if (!userId || !category || !subType || quantity === undefined) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    // Input Validation
+    const validationResult = activitySchema.safeParse(body);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { error: "Invalid input", details: validationResult.error.errors },
+        { status: 400 }
+      );
     }
 
+    const { userId, category, subType, quantity, unit, nudgeShown, nudgeAccepted } = validationResult.data;
+
     // Calculate CO2 equivalent in real time
-    const co2 = calculateEmission(category as CategoryType, subType, parseFloat(quantity));
+    const co2 = calculateEmission(category as CategoryType, subType, quantity);
 
     // 1. Insert activity log
     const activity = await prisma.activity.create({

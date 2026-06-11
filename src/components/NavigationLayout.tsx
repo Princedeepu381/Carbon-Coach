@@ -176,6 +176,7 @@ export const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) 
             <div className="relative">
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
+                aria-label="View notifications"
                 className="p-2.5 rounded-full glass-panel-l1 hover:bg-[#edf2eb] transition-all active:scale-95 duration-200 text-on-surface relative"
               >
                 <BellIcon className="w-4 h-4" />
@@ -225,6 +226,7 @@ export const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) 
             <div className="relative">
               <button
                 onClick={() => setSettingsOpen(!settingsOpen)}
+                aria-label="Open settings"
                 className="p-2.5 rounded-full glass-panel-l1 hover:bg-[#edf2eb] transition-all active:scale-95 duration-200 text-on-surface"
               >
                 <SettingsIcon className="w-4 h-4" />

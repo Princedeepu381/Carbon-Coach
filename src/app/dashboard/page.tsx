@@ -339,6 +339,15 @@ function DashboardContent() {
 
         <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <motion.div
+            role="button"
+            tabIndex={0}
+            aria-label="Take Metro Today action advice"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setIsLogOpen(true);
+              }
+            }}
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             className="bg-white/60 rounded-xl p-3 border border-white/80 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.8)] hover:bg-white transition-all cursor-pointer"
@@ -354,6 +363,15 @@ function DashboardContent() {
           </motion.div>
 
           <motion.div
+            role="button"
+            tabIndex={0}
+            aria-label="Try Plant-Based Meal action advice"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setIsLogOpen(true);
+              }
+            }}
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             className="bg-white/60 rounded-xl p-3 border border-white/80 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.8)] hover:bg-white transition-all cursor-pointer"
@@ -375,7 +393,9 @@ function DashboardContent() {
         {quickCategories.map((qc) => (
           <motion.button
             key={qc.category}
+            type="button"
             onClick={() => setIsLogOpen(true)}
+            aria-label={`Log ${qc.label} activity`}
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.95 }}
             className={`py-3.5 px-4 rounded-2xl bg-white border border-[#edf2eb] text-xs font-bold font-display text-[#3d4f3b] transition-all text-center shadow-[4px_4px_8px_rgba(165,180,160,0.1),inset_2px_2px_4px_rgba(255,255,255,0.9),inset_-2px_-2px_4px_rgba(165,180,160,0.06)] hover:bg-[#fbfcfb] ${qc.color}`}
@@ -574,7 +594,7 @@ function DashboardContent() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handleDeleteActivity(act.id)}
-                        aria-label="Delete activity"
+                        aria-label={`Delete ${act.subType.replace("_", " ")} activity`}
                         className="p-1.5 text-on-surface-variant hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all rounded-lg hover:bg-red-50"
                       >
                         <Trash2 className="w-4 h-4" />

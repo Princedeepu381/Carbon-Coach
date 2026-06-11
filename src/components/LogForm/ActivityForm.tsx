@@ -208,6 +208,7 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, o
                 key={cat.id}
                 type="button"
                 onClick={() => setCategory(cat.id)}
+                aria-label={`Select category ${cat.label}`}
                 className={`py-3.5 px-4 rounded-2xl flex flex-col items-center gap-2 border transition-all duration-300 ${
                   isSelected
                     ? `${cat.activeBg} ${cat.activeBorder} ${cat.activeText} ${cat.activeInset}`
@@ -233,6 +234,7 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, o
           <select
             value={subType}
             onChange={(e) => setSubType(e.target.value)}
+            aria-label="Select activity type"
             className="w-full clay-input px-4 py-3.5 pr-10 text-sm focus:ring-1 focus:ring-primary appearance-none font-bold"
           >
             {activeSubtypes.map((sub) => (
@@ -257,6 +259,7 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, o
             type="number"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
+            aria-label="Enter quantity"
             min="0.1"
             step="any"
             required
@@ -305,6 +308,7 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, o
           <button
             type="button"
             onClick={onCancel}
+            aria-label="Cancel activity logging"
             className="px-6 py-3.5 text-sm font-bold clay-btn clay-btn-secondary"
           >
             Cancel
@@ -313,6 +317,7 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, o
         <button
           type="submit"
           disabled={submitting}
+          aria-label="Submit activity log"
           className="flex-grow sm:flex-grow-0 px-8 py-3.5 text-sm font-black clay-btn clay-btn-primary flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
         >
           {submitting ? (

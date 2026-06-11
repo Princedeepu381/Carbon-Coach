@@ -2,8 +2,20 @@
 import { NextResponse } from "next/server";
 import { getAiNudge } from "@/lib/gemini";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rateLimit";
+import { nudgeRequestSchema } from "@/lib/validation";
 
 export async function POST(req: Request) {
+  // Rate Limiting
+  const ip = req.headers.get("x-forwarded-for")?.split(',')[0].trim() || req.headers.get("x-real-ip") || "unknown";
+  const limitResult = rateLimit(ip, 20, 60000); // 20 requests per minute
+  if (!limitResult.success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   try {
     let body;
     try {
@@ -12,11 +24,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid or empty JSON body" }, { status: 400 });
     }
 
-    const { userId, category, subType, quantity, unit } = body;
-
-    if (!userId || !category || !subType || quantity === undefined) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    // Input Validation
+    const validationResult = nudgeRequestSchema.safeParse(body);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { error: "Invalid input", details: validationResult.error.errors },
+        { status: 400 }
+      );
     }
+
+    const { userId, category, subType, quantity, unit } = validationResult.data;
 
     // Fetch user's weekly pattern for context
     const now = new Date();

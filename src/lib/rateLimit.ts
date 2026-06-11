@@ -9,7 +9,7 @@ interface RateLimitRecord {
 const rateLimitMap = new Map<string, RateLimitRecord>();
 
 // Clean up old entries every 5 minutes
-setInterval(() => {
+const cleanupInterval = setInterval(() => {
   const now = Date.now();
   rateLimitMap.forEach((record, key) => {
     if (now > record.resetTime) {
@@ -17,6 +17,10 @@ setInterval(() => {
     }
   });
 }, 5 * 60 * 1000);
+
+if (cleanupInterval && typeof cleanupInterval.unref === "function") {
+  cleanupInterval.unref();
+}
 
 export interface RateLimitResult {
   success: boolean;
