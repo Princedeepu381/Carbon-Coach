@@ -2,8 +2,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
-import { WorldScene } from "@/components/LivingWorld/WorldScene";
+
+const WorldScene = dynamic(() => import("@/components/LivingWorld/WorldScene").then(mod => mod.WorldScene), {
+  ssr: false,
+  loading: () => <div className="w-full h-[320px] md:h-[400px] bg-[#edf2eb] rounded-3xl animate-pulse flex items-center justify-center text-xs font-bold text-[#2d5e29]/60">Loading environment...</div>
+});
 import { AnimatedCard, CountingBadge } from "@/components/Animated";
 import { useCountUp } from "@/lib/animations/hooks";
 import { TreePine, Waves, CloudSun, Calendar, HelpCircle, ArrowLeftRight, ZoomIn, ZoomOut } from "lucide-react";
@@ -157,6 +162,7 @@ export default function MyWorldPage() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setZoomLevel(Math.max(0.5, zoomLevel - 0.1))}
+            aria-label="Zoom Out"
             className="p-2 rounded-lg bg-white border border-[#edf2eb] hover:bg-[#f8faf7] transition-colors"
           >
             <ZoomOut className="w-4 h-4 text-[#3d4f3b]" />
@@ -168,6 +174,7 @@ export default function MyWorldPage() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setZoomLevel(Math.min(1.5, zoomLevel + 0.1))}
+            aria-label="Zoom In"
             className="p-2 rounded-lg bg-white border border-[#edf2eb] hover:bg-[#f8faf7] transition-colors"
           >
             <ZoomIn className="w-4 h-4 text-[#3d4f3b]" />
@@ -196,6 +203,7 @@ export default function MyWorldPage() {
             whileHover={{ scale: 1.2, rotate: 10 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setActiveTooltip(activeTooltip === "forest" ? null : "forest")}
+            aria-label="Forest Information"
             className="w-8 h-8 rounded-full bg-white/90 hover:bg-white border border-[#edf2eb] shadow-md flex items-center justify-center text-emerald-600 transition-all"
           >
             <HelpCircle className="w-4.5 h-4.5 stroke-[2.5]" />
@@ -220,6 +228,7 @@ export default function MyWorldPage() {
             whileHover={{ scale: 1.2, rotate: 10 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setActiveTooltip(activeTooltip === "river" ? null : "river")}
+            aria-label="River Information"
             className="w-8 h-8 rounded-full bg-white/90 hover:bg-white border border-[#edf2eb] shadow-md flex items-center justify-center text-sky-600 transition-all"
           >
             <HelpCircle className="w-4.5 h-4.5 stroke-[2.5]" />
@@ -244,6 +253,7 @@ export default function MyWorldPage() {
             whileHover={{ scale: 1.2, rotate: 10 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setActiveTooltip(activeTooltip === "sky" ? null : "sky")}
+            aria-label="Sky Information"
             className="w-8 h-8 rounded-full bg-white/90 hover:bg-white border border-[#edf2eb] shadow-md flex items-center justify-center text-amber-600 transition-all"
           >
             <HelpCircle className="w-4.5 h-4.5 stroke-[2.5]" />
@@ -279,6 +289,7 @@ export default function MyWorldPage() {
                   whileHover={{ scale: 1.2, rotate: 90 }}
                   whileTap={{ scale: 0.8 }}
                   onClick={() => setActiveTooltip(null)}
+                  aria-label="Close details"
                   className="text-[#3d4f3b] hover:text-[#1b261a] text-xs font-black"
                 >
                   ✕
@@ -356,7 +367,7 @@ export default function MyWorldPage() {
         </div>
 
         {/* Stats summary */}
-        <div className="shrink-0 flex items-center gap-6 text-center border-l border-[#edf2eb] pl-6 hidden sm:flex">
+        <div className="shrink-0 flex items-center justify-around gap-6 text-center w-full mt-4 pt-4 border-t border-[#edf2eb] sm:w-auto sm:mt-0 sm:pt-0 sm:border-t-0 sm:border-l sm:pl-6">
           <div>
             <span className="text-[9px] text-[#3d4f3b] font-black uppercase tracking-wider block mb-1">
               Logged Carbon

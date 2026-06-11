@@ -3,6 +3,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, ChevronLeft, Check, Target, Leaf, Globe } from "lucide-react";
 import confetti from "canvas-confetti";
@@ -325,11 +326,13 @@ export default function OnboardingPage() {
               </div>
 
               <div className="flex-1 flex flex-col justify-center items-center">
-                <div className="w-full max-w-md mb-6">
-                  <img
+                <div className="w-full max-w-md mb-6 relative h-64 md:h-72">
+                  <Image
                     src="/images/thriving_forest_clay.png"
                     alt="Living World Preview"
-                    className="w-full h-auto rounded-3xl border-2 border-[#edf2eb] shadow-lg"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 450px"
+                    className="rounded-3xl border-2 border-[#edf2eb] shadow-lg object-cover"
                   />
                 </div>
 

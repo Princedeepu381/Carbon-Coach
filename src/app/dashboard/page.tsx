@@ -3,10 +3,22 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Image from "next/image";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
-import { WorldScene } from "@/components/LivingWorld/WorldScene";
 import { CarbonOrb } from "@/components/LivingWorld/CarbonOrb";
-import { WeeklyChart } from "@/components/Dashboard/WeeklyChart";
+
+const WorldScene = dynamic(() => import("@/components/LivingWorld/WorldScene").then(mod => mod.WorldScene), {
+  ssr: false,
+  loading: () => <div className="w-full h-[320px] md:h-[400px] bg-[#edf2eb] rounded-3xl animate-pulse flex items-center justify-center text-xs font-bold text-[#2d5e29]/60">Loading environment...</div>
+});
+
+const WeeklyChart = dynamic(() => import("@/components/Dashboard/WeeklyChart").then(mod => mod.WeeklyChart), {
+  ssr: false,
+  loading: () => <div className="h-64 w-full bg-[#edf2eb] rounded-3xl animate-pulse flex items-center justify-center text-xs font-bold text-[#2d5e29]/60">Loading chart...</div>
+});
+
+const MotionImage = motion(Image);
 import { ActivityForm } from "@/components/LogForm/ActivityForm";
 import { computeWorldState } from "@/lib/computeWorld";
 import { AnimatedCard, AnimatedButton, CountingBadge, AnimatedProgress, StaggerContainer } from "@/components/Animated";
@@ -212,7 +224,7 @@ function DashboardContent() {
       {/* Improved Living World Status Card */}
       <AnimatedCard direction="scale" delay={0.1} className="w-full relative rounded-[32px] overflow-hidden border-2 border-white/90 shadow-xl">
         {/* Banner Background Image */}
-        <motion.img
+        <MotionImage
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
@@ -222,7 +234,10 @@ function DashboardContent() {
               : "/images/critical_forest_clay.png"
           }
           alt="Living World Banner"
-          className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover select-none pointer-events-none"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-transparent pointer-events-none" />
         
@@ -271,11 +286,11 @@ function DashboardContent() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="grid grid-cols-3 gap-3"
           >
-            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-white/70 shadow-lg">
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-2.5 sm:p-4 border border-white/70 shadow-lg">
               <div className="text-2xl font-black text-emerald-600 font-display">{state.trees}</div>
               <div className="text-[10px] font-bold text-gray-600 uppercase tracking-wider mt-1">Trees</div>
             </div>
-            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-white/70 shadow-lg">
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-2.5 sm:p-4 border border-white/70 shadow-lg">
               <div className="flex items-center gap-1.5">
                 <motion.div
                   animate={{ rotate: [0, 10, -10, 0] }}
@@ -287,7 +302,7 @@ function DashboardContent() {
               </div>
               <div className="text-[10px] font-bold text-gray-600 uppercase tracking-wider mt-1">Day Streak</div>
             </div>
-            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-4 border border-white/70 shadow-lg">
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl p-2.5 sm:p-4 border border-white/70 shadow-lg">
               <div className="text-2xl font-black text-blue-600 font-display">{Math.round((1 - state.skyPollution) * 100)}%</div>
               <div className="text-[10px] font-bold text-gray-600 uppercase tracking-wider mt-1">Air Quality</div>
             </div>
@@ -559,6 +574,7 @@ function DashboardContent() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handleDeleteActivity(act.id)}
+                        aria-label="Delete activity"
                         className="p-1.5 text-on-surface-variant hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all rounded-lg hover:bg-red-50"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -726,6 +742,7 @@ function DashboardContent() {
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={handleCloseModal}
+                  aria-label="Close modal"
                   className="p-1.5 rounded-full hover:bg-[#edf2eb] text-[#3d4f3b] hover:text-[#1b261a] transition-colors"
                 >
                   <X className="w-5 h-5" />

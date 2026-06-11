@@ -36,5 +36,5 @@ COPY --from=builder /app/prisma ./prisma
 # Expose port
 EXPOSE 3000
 
-# Start server
-CMD ["npm", "start"]
+# Start server with automatic database initialization and seeding
+CMD ["sh", "-c", "npx prisma db push --accept-data-loss && npx prisma db seed && npm start"]

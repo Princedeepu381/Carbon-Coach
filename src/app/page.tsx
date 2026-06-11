@@ -3,9 +3,12 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Leaf, Cpu, Globe, ArrowRight, ChevronDown } from "lucide-react";
 import { useInView } from "react-intersection-observer";
+
+const MotionImage = motion(Image);
 import { ScrollSection } from "@/components/Landing/ScrollSection";
 import { CountingNumber } from "@/components/Landing/CountingNumber";
 import { ParallaxBackground } from "@/components/Landing/ParallaxBackground";
@@ -39,18 +42,19 @@ export default function LandingPage() {
         <div className="font-display text-xl text-primary flex items-center gap-2 prismatic-text font-extrabold tracking-tight">
           🌱 CarbonCoach
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 sm:gap-6">
           <Link
             href="/login"
-            className="text-sm font-bold text-on-surface-variant hover:text-primary transition-colors"
+            className="text-xs sm:text-sm font-bold text-on-surface-variant hover:text-primary transition-colors"
           >
             Log In
           </Link>
           <Link
             href="/signup"
-            className="px-5 py-2.5 clay-btn clay-btn-secondary text-xs uppercase tracking-wider font-display"
+            className="px-3.5 py-2 sm:px-5 sm:py-2.5 clay-btn clay-btn-secondary text-[10px] sm:text-xs uppercase tracking-wider font-display"
           >
-            Start for free
+            <span className="hidden sm:inline">Start for free</span>
+            <span className="sm:hidden">Start</span>
           </Link>
         </div>
       </nav>
@@ -117,11 +121,14 @@ export default function LandingPage() {
             transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
             className="lg:col-span-6 w-full flex justify-center items-center"
           >
-            <div className="glass-panel-l2 rounded-[32px] p-4 shadow-[8px_8px_24px_rgba(165,180,160,0.2)] bg-white border border-white/80 overflow-hidden relative group max-w-lg">
-              <img
+            <div className="glass-panel-l2 rounded-[32px] p-4 shadow-[8px_8px_24px_rgba(165,180,160,0.2)] bg-white border border-white/80 overflow-hidden relative group max-w-lg w-full h-[320px] md:h-[380px]">
+              <Image
                 src="/images/landing_hero_clay.png"
                 alt="Claymorphic Eco World Preview"
-                className="w-full h-auto rounded-2xl object-cover shadow-md transition-all duration-500 group-hover:scale-[1.02] pointer-events-none select-none"
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 500px"
+                className="rounded-2xl object-cover shadow-md transition-all duration-500 group-hover:scale-[1.02] pointer-events-none select-none p-4"
               />
             </div>
           </motion.div>
@@ -278,7 +285,7 @@ export default function LandingPage() {
             {/* World Preview */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
               <div className="lg:col-span-7 rounded-[20px] overflow-hidden border border-white/60 shadow-inner relative group h-64 md:h-80">
-                <motion.img
+                <MotionImage
                   key={previewType}
                   src={
                     previewType === "thriving"
@@ -289,7 +296,9 @@ export default function LandingPage() {
                   initial={{ opacity: 0, scale: 1.1 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.7 }}
-                  className="w-full h-full object-cover select-none pointer-events-none"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 600px"
+                  className="object-cover select-none pointer-events-none"
                 />
               </div>
 
