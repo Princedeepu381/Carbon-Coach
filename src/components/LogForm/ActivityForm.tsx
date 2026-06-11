@@ -1,7 +1,7 @@
 // src/components/LogForm/ActivityForm.tsx
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Car, Utensils, Zap, ShoppingBag, Plus, Loader2, Check } from "lucide-react";
 import { NudgeCard } from "./NudgeCard";
 import confetti from "canvas-confetti";
@@ -80,28 +80,13 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, o
     }
   }, [category]);
 
-  // Debounced AI Nudge Trigger
-  useEffect(() => {
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
-    }
+  const getUnit = useCallback(() => {
+    const list = SUBTYPES[category as keyof typeof SUBTYPES] || [];
+    const item = list.find((i) => i.value === subType);
+    return item ? item.unit : "";
+  }, [category, subType]);
 
-    const qtyVal = parseFloat(quantity);
-    if (!subType || isNaN(qtyVal) || qtyVal <= 0) {
-      setNudge(null);
-      return;
-    }
-
-    debounceTimeout.current = setTimeout(() => {
-      fetchNudge(category, subType, qtyVal);
-    }, 500);
-
-    return () => {
-      if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
-    };
-  }, [category, subType, quantity]);
-
-  const fetchNudge = async (cat: string, sub: string, qty: number) => {
+  const fetchNudge = useCallback(async (cat: string, sub: string, qty: number) => {
     setLoadingNudge(true);
     try {
       const res = await fetch("/api/nudge", {
@@ -128,13 +113,28 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, o
     } finally {
       setLoadingNudge(false);
     }
-  };
+  }, [userId, getUnit]);
 
-  const getUnit = () => {
-    const list = SUBTYPES[category as keyof typeof SUBTYPES] || [];
-    const item = list.find((i) => i.value === subType);
-    return item ? item.unit : "";
-  };
+  // Debounced AI Nudge Trigger
+  useEffect(() => {
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    const qtyVal = parseFloat(quantity);
+    if (!subType || isNaN(qtyVal) || qtyVal <= 0) {
+      setNudge(null);
+      return;
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      fetchNudge(category, subType, qtyVal);
+    }, 500);
+
+    return () => {
+      if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+    };
+  }, [category, subType, quantity, fetchNudge]);
 
   const handleAcceptNudge = () => {
     if (!nudge) return;
