@@ -1,7 +1,7 @@
 // src/app/dashboard/page.tsx
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -75,7 +75,7 @@ function DashboardContent() {
     }
 
     fetchDashboardData(savedId, savedGoal);
-  }, [searchParams]);
+  }, [searchParams, fetchDashboardData]);
 
   useEffect(() => {
     if (statsInView) {
@@ -84,7 +84,7 @@ function DashboardContent() {
     }
   }, [statsInView, startEmissions, startStreak]);
 
-  const fetchDashboardData = async (uid: string, goal: number) => {
+  const fetchDashboardData = useCallback(async (uid: string, goal: number) => {
     try {
       // Fetch activities & compile statistics
       const actRes = await fetch(`/api/activities?userId=${uid}`, {
@@ -114,7 +114,7 @@ function DashboardContent() {
       setInsight("Welcome to CarbonCoach! Log your first activity to begin tracking your environmental impact.");
       setStreakCount(4);
     }
-  };
+  }, []);
 
   const generateDemoWeeklyData = () => {
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];

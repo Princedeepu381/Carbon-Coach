@@ -1,7 +1,7 @@
 // src/app/world/page.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -51,7 +51,7 @@ export default function MyWorldPage() {
     }
   }, [selectedSnapshot, startCo2, startTree]);
 
-  const fetchWorldData = async (uid: string) => {
+  const fetchWorldData = useCallback(async (uid: string) => {
     try {
       const res = await fetch(`/api/world?userId=${uid}`, {
         signal: AbortSignal.timeout(5000), // 5 second timeout
@@ -79,7 +79,7 @@ export default function MyWorldPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const generateDemoSnapshots = () => {
     const today = new Date();
