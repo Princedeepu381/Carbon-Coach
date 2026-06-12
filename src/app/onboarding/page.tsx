@@ -134,10 +134,11 @@ export default function OnboardingPage() {
 
               <div className="flex-1 flex flex-col justify-center">
                 <div className="mb-6">
-                  <label className="text-sm font-black text-[#1b261a] block mb-4 font-display">
+                  <label htmlFor="weekly-goal-slider" className="text-sm font-black text-[#1b261a] block mb-4 font-display">
                     Weekly Carbon Budget (kg CO₂)
                   </label>
                   <input
+                    id="weekly-goal-slider"
                     type="range"
                     min="20"
                     max="100"

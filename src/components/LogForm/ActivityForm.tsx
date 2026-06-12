@@ -227,11 +227,12 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, o
 
       {/* Subtypes dropdown/grid */}
       <div>
-        <label className="text-xs uppercase tracking-widest text-on-surface-variant font-extrabold block mb-3 font-display">
+        <label htmlFor="activity-type-select" className="text-xs uppercase tracking-widest text-on-surface-variant font-extrabold block mb-3 font-display">
           2. Activity Details
         </label>
         <div className="relative">
           <select
+            id="activity-type-select"
             value={subType}
             onChange={(e) => setSubType(e.target.value)}
             aria-label="Select activity type"
@@ -251,11 +252,12 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, o
 
       {/* Quantity input */}
       <div>
-        <label className="text-xs uppercase tracking-widest text-on-surface-variant font-extrabold block mb-3 font-display">
+        <label htmlFor="quantity-input" className="text-xs uppercase tracking-widest text-on-surface-variant font-extrabold block mb-3 font-display">
           3. Enter Quantity
         </label>
         <div className="flex items-center gap-3 clay-input p-1.5 focus-within:border-primary transition-all">
           <input
+            id="quantity-input"
             type="number"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}

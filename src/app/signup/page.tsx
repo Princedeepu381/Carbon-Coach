@@ -96,12 +96,13 @@ export default function SignupPage() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {/* Name Field */}
           <div>
-            <label className="text-[10px] uppercase tracking-widest text-[#3d4f3b] font-black block mb-2 font-display">
+            <label htmlFor="name-input" className="text-[10px] uppercase tracking-widest text-[#3d4f3b] font-black block mb-2 font-display">
               Full Name
             </label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
               <input
+                id="name-input"
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleChange("name", e.target.value)}
@@ -118,12 +119,13 @@ export default function SignupPage() {
 
           {/* Email Field */}
           <div>
-            <label className="text-[10px] uppercase tracking-widest text-[#3d4f3b] font-black block mb-2 font-display">
+            <label htmlFor="email-input" className="text-[10px] uppercase tracking-widest text-[#3d4f3b] font-black block mb-2 font-display">
               Email Address
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
               <input
+                id="email-input"
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleChange("email", e.target.value)}
@@ -140,12 +142,13 @@ export default function SignupPage() {
 
           {/* Password Field */}
           <div>
-            <label className="text-[10px] uppercase tracking-widest text-[#3d4f3b] font-black block mb-2 font-display">
+            <label htmlFor="password-input" className="text-[10px] uppercase tracking-widest text-[#3d4f3b] font-black block mb-2 font-display">
               Password
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
               <input
+                id="password-input"
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={(e) => handleChange("password", e.target.value)}
@@ -169,12 +172,13 @@ export default function SignupPage() {
 
           {/* Confirm Password Field */}
           <div>
-            <label className="text-[10px] uppercase tracking-widest text-[#3d4f3b] font-black block mb-2 font-display">
+            <label htmlFor="confirm-password-input" className="text-[10px] uppercase tracking-widest text-[#3d4f3b] font-black block mb-2 font-display">
               Confirm Password
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-on-surface-variant" />
               <input
+                id="confirm-password-input"
                 type={showConfirmPassword ? "text" : "password"}
                 value={formData.confirmPassword}
                 onChange={(e) => handleChange("confirmPassword", e.target.value)}

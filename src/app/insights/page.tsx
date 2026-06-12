@@ -150,6 +150,7 @@ export default function InsightsPage() {
           onClick={handleExportData}
           variant="secondary"
           size="md"
+          aria-label="Export carbon data"
           className="flex items-center gap-1.5"
         >
           <Download className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -503,6 +504,7 @@ export default function InsightsPage() {
             <motion.a
               key={idx}
               href={resource.link}
+              aria-label={`Read resource: ${resource.title}`}
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
               className="p-4 bg-white rounded-xl border border-[#edf2eb] hover:border-primary/40 transition-all group"

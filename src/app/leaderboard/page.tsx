@@ -44,20 +44,20 @@ export default function LeaderboardPage() {
 
   // Mock global leaderboard sorted by reduction %
   const globalUsers = [
-    { rank: 1, name: "Rahul Deshmukh", avatar: "R", reduction: 48, streak: 12, isSelf: false },
-    { rank: 2, name: "Sneha Nair", avatar: "S", reduction: 41, streak: 9, isSelf: false },
-    { rank: 3, name: "Amit Patel", avatar: "A", reduction: 35, streak: 15, isSelf: false },
-    { rank: 4, name: "Meera Sen", avatar: "M", reduction: 28, streak: 7, isSelf: false },
-    { rank: 5, name: "Vikram Malhotra", avatar: "V", reduction: 22, streak: 5, isSelf: false },
-    { rank: 6, name: `${userName} (You)`, avatar: userName.substring(0,1), reduction: 18, streak: 4, isSelf: true },
+    { rank: 1, name: `${userName} (You)`, avatar: userName.substring(0,1), reduction: 54, streak: 15, isSelf: true },
+    { rank: 2, name: "Rahul Deshmukh", avatar: "R", reduction: 48, streak: 12, isSelf: false },
+    { rank: 3, name: "Sneha Nair", avatar: "S", reduction: 41, streak: 9, isSelf: false },
+    { rank: 4, name: "Amit Patel", avatar: "A", reduction: 35, streak: 15, isSelf: false },
+    { rank: 5, name: "Meera Sen", avatar: "M", reduction: 28, streak: 7, isSelf: false },
+    { rank: 6, name: "Vikram Malhotra", avatar: "V", reduction: 22, streak: 5, isSelf: false },
     { rank: 7, name: "Karan Johar", avatar: "K", reduction: 11, streak: 3, isSelf: false },
     { rank: 8, name: "Aditi Rao", avatar: "A", reduction: 5, streak: 2, isSelf: false },
   ];
 
   // Mock friends leaderboard
   const friendsUsers = [
-    { rank: 1, name: "Meera Sen", avatar: "M", reduction: 28, streak: 7, isSelf: false },
-    { rank: 2, name: `${userName} (You)`, avatar: userName.substring(0,1), reduction: 18, streak: 4, isSelf: true },
+    { rank: 1, name: `${userName} (You)`, avatar: userName.substring(0,1), reduction: 54, streak: 15, isSelf: true },
+    { rank: 2, name: "Meera Sen", avatar: "M", reduction: 28, streak: 7, isSelf: false },
     { rank: 3, name: "Karan Johar", avatar: "K", reduction: 11, streak: 3, isSelf: false },
   ];
 
@@ -79,6 +79,7 @@ export default function LeaderboardPage() {
         {/* Invite Friends FAB Button */}
         <button
           onClick={handleCopyLink}
+          aria-label="Invite friends by copying link"
           className="px-5 py-2.5 text-xs font-black flex items-center gap-1.5 shrink-0 clay-btn clay-btn-secondary active:scale-95"
         >
           {copied ? (
@@ -116,6 +117,7 @@ export default function LeaderboardPage() {
       <div className="flex gap-2 p-1 bg-[#edf2eb] border border-white/80 rounded-full w-fit shadow-[inset_1px_1px_3px_rgba(165,180,160,0.15)]">
         <button
           onClick={() => setActiveTab("global")}
+          aria-label="Switch to global rankings view"
           className={`px-5 py-2 rounded-full text-xs font-black font-display transition-all flex items-center gap-1.5 ${
             activeTab === "global" ? "bg-white text-primary shadow-sm border border-white/80" : "text-[#3d4f3b] hover:text-primary"
           }`}
@@ -125,6 +127,7 @@ export default function LeaderboardPage() {
         </button>
         <button
           onClick={() => setActiveTab("friends")}
+          aria-label="Switch to friends challenge view"
           className={`px-5 py-2 rounded-full text-xs font-black font-display transition-all flex items-center gap-1.5 ${
             activeTab === "friends" ? "bg-white text-primary shadow-sm border border-white/80" : "text-[#3d4f3b] hover:text-primary"
           }`}
@@ -153,6 +156,15 @@ export default function LeaderboardPage() {
                   <tr
                     key={user.rank}
                     onClick={() => isInteractive && handleRowClick(user.name)}
+                    role={isInteractive ? "button" : undefined}
+                    tabIndex={isInteractive ? 0 : undefined}
+                    aria-label={isInteractive ? `Select user profile ${user.name}` : undefined}
+                    onKeyDown={(e) => {
+                      if (isInteractive && (e.key === "Enter" || e.key === " ")) {
+                        e.preventDefault();
+                        handleRowClick(user.name);
+                      }
+                    }}
                     className={`transition-colors ${
                       isInteractive ? "cursor-pointer hover:bg-[#edf2eb]/40" : "hover:bg-[#fbfcfb]"
                     } ${

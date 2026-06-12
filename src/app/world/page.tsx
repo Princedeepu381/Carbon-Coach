@@ -346,6 +346,8 @@ export default function MyWorldPage() {
           
           <div className="relative flex-grow flex items-center">
             <input
+              id="time-scrubber-input"
+              aria-label="Timeline Scrubber"
               type="range"
               min="0"
               max={snapshots.length - 1}

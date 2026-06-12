@@ -238,19 +238,19 @@ export const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) 
                   <div className="absolute right-0 mt-3 w-72 z-50 glass-panel-l2 bg-white border border-[#edf2eb] rounded-2xl p-4 shadow-2xl animate-in fade-in slide-in-from-top-3 duration-200">
                     <h3 className="text-sm font-black text-[#1b261a] mb-3 font-display">Settings</h3>
                     <div className="flex flex-col gap-2">
-                      <button className="flex items-center justify-between p-3 rounded-xl hover:bg-[#edf2eb] transition-all text-left">
+                      <button aria-label="Adjust Weekly Goal settings" className="flex items-center justify-between p-3 rounded-xl hover:bg-[#edf2eb] transition-all text-left">
                         <span className="text-xs font-bold text-[#3d4f3b]">Weekly Goal</span>
                         <span className="text-xs text-primary font-black">42 kg CO₂</span>
                       </button>
-                      <button className="flex items-center justify-between p-3 rounded-xl hover:bg-[#edf2eb] transition-all text-left">
+                      <button aria-label="Toggle notifications" className="flex items-center justify-between p-3 rounded-xl hover:bg-[#edf2eb] transition-all text-left">
                         <span className="text-xs font-bold text-[#3d4f3b]">Notifications</span>
                         <span className="text-xs text-emerald-600 font-black">Enabled</span>
                       </button>
-                      <button className="flex items-center justify-between p-3 rounded-xl hover:bg-[#edf2eb] transition-all text-left">
+                      <button aria-label="Change theme settings" className="flex items-center justify-between p-3 rounded-xl hover:bg-[#edf2eb] transition-all text-left">
                         <span className="text-xs font-bold text-[#3d4f3b]">Theme</span>
                         <span className="text-xs text-[#3d4f3b] font-black">Light</span>
                       </button>
-                      <button className="flex items-center justify-between p-3 rounded-xl hover:bg-[#edf2eb] transition-all text-left">
+                      <button aria-label="Change language settings" className="flex items-center justify-between p-3 rounded-xl hover:bg-[#edf2eb] transition-all text-left">
                         <span className="text-xs font-bold text-[#3d4f3b]">Language</span>
                         <span className="text-xs text-[#3d4f3b] font-black">English</span>
                       </button>
