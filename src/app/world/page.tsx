@@ -63,7 +63,7 @@ export default function MyWorldPage() {
         }
       }
     } catch (e) {
-      console.error(e);
+      // Error fetching world data
     } finally {
       setLoading(false);
     }

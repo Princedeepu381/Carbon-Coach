@@ -76,7 +76,7 @@ export default function InsightsPage() {
         });
       }
     } catch (e) {
-      console.error("Failed to fetch insights:", e);
+      // Error fetching insights
     } finally {
       setLoading(false);
     }
