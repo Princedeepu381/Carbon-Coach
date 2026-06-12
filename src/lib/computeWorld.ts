@@ -1,5 +1,8 @@
 // src/lib/computeWorld.ts
 
+/**
+ * Represents the visual state of the living world based on carbon emissions
+ */
 export interface WorldState {
   mood: "thriving" | "neutral" | "stressed" | "critical";
   trees: number;
@@ -10,6 +13,12 @@ export interface WorldState {
   skyColor: string;
 }
 
+/**
+ * Computes the world state based on daily CO2 emissions vs weekly goal
+ * @param co2Kg - Current day's CO2 emissions in kilograms
+ * @param goalKg - Weekly CO2 goal in kilograms
+ * @returns WorldState object with visual parameters for the living world
+ */
 export function computeWorldState(co2Kg: number, goalKg: number): WorldState {
   const dailyGoal = goalKg / 7;
   

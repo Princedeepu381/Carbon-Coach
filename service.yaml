@@ -19,6 +19,9 @@ spec:
             - name: DATABASE_URL
               value: "file:/app/prisma/carboncoach.db"
             - name: NEXT_PUBLIC_APP_URL
-              value: "http://localhost:3000"
+              value: "https://carboncoach-1033616809892.us-central1.run.app"
             - name: GEMINI_API_KEY
-              value: "your_google_gemini_api_key_here"
+              valueFrom:
+                secretKeyRef:
+                  name: gemini-api-key
+                  key: latest

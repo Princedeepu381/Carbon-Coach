@@ -1,44 +1,25 @@
 steps:
-  # Install dependencies
-  - name: 'node:18'
-    entrypoint: npm
-    args: ['install']
-  
-  # Build the application
-  - name: 'node:18'
-    entrypoint: npm
-    args: ['run', 'build']
-  
-  # Build Docker image
+  # Build Docker image with latest tag
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/carboncoach:$COMMIT_SHA', '.']
-  
-  # Push to Container Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/carboncoach:$COMMIT_SHA']
-  
-  # Deploy to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: gcloud
     args:
-      - 'run'
-      - 'deploy'
-      - 'carboncoach'
-      - '--image'
-      - 'gcr.io/$PROJECT_ID/carboncoach:$COMMIT_SHA'
-      - '--region'
-      - 'us-central1'
-      - '--platform'
-      - 'managed'
-      - '--allow-unauthenticated'
-      - '--set-env-vars'
-      - 'NODE_ENV=production,NEXT_PUBLIC_APP_URL=https://carboncoach-carbon-coach-499117.run.app'
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/carboncoach:latest'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/carboncoach:$BUILD_ID'
+      - '.'
+  
+  # Push both tags to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/carboncoach:latest']
+  
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/carboncoach:$BUILD_ID']
 
 images:
-  - 'gcr.io/$PROJECT_ID/carboncoach:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/carboncoach:latest'
+  - 'gcr.io/$PROJECT_ID/carboncoach:$BUILD_ID'
 
 options:
   machineType: 'N1_HIGHCPU_8'
 timeout: '1200s'
-
-# Made with Bob

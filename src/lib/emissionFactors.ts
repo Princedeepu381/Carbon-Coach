@@ -1,5 +1,10 @@
 // src/lib/emissionFactors.ts
 
+/**
+ * Carbon emission factors for various activities
+ * All values are in kg CO2 per unit (km, meal, kWh, item, etc.)
+ * Based on India-specific data where applicable
+ */
 export const EMISSION_FACTORS = {
   transport: {
     car_petrol: 0.21,         // kg CO2 per km
@@ -38,6 +43,14 @@ export const EMISSION_FACTORS = {
 
 export type CategoryType = keyof typeof EMISSION_FACTORS;
 
+/**
+ * Calculates carbon emissions for a given activity
+ * @param category - Activity category (transport, food, energy, shopping)
+ * @param subType - Specific activity type within the category
+ * @param quantity - Amount of activity (km, meals, kWh, items)
+ * @returns Carbon emission in kg CO2
+ * @throws Error if quantity is negative or category is unknown
+ */
 export function calculateEmission(category: CategoryType, subType: string, quantity: number): number {
   if (quantity < 0) {
     throw new Error("Quantity cannot be negative");

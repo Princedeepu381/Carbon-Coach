@@ -1,7 +1,7 @@
 // src/components/LivingWorld/WorldScene.tsx
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { computeWorldState, WorldState } from "@/lib/computeWorld";
 
@@ -10,7 +10,7 @@ interface WorldSceneProps {
   weeklyGoalKg: number;
 }
 
-export const WorldScene: React.FC<WorldSceneProps> = ({ co2Kg, weeklyGoalKg }) => {
+export const WorldScene: React.FC<WorldSceneProps> = memo(({ co2Kg, weeklyGoalKg }) => {
   const state: WorldState = computeWorldState(co2Kg, weeklyGoalKg);
 
   // Define tree positions so they sprout in natural, fixed locations on the hills
@@ -291,4 +291,6 @@ export const WorldScene: React.FC<WorldSceneProps> = ({ co2Kg, weeklyGoalKg }) =
       </div>
     </div>
   );
-};
+});
+
+WorldScene.displayName = 'WorldScene';

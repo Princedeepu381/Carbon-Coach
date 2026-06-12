@@ -1,7 +1,7 @@
 // src/components/Dashboard/WeeklyChart.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import {
   AreaChart,
   Area,
@@ -24,7 +24,19 @@ interface WeeklyChartProps {
   dailyGoalKg: number;
 }
 
-export const WeeklyChart: React.FC<WeeklyChartProps> = ({ data, dailyGoalKg }) => {
+interface TooltipPayload {
+  value: number;
+  name: string;
+  color: string;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipPayload[];
+  label?: string;
+}
+
+export const WeeklyChart: React.FC<WeeklyChartProps> = memo(({ data, dailyGoalKg }) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -40,9 +52,9 @@ export const WeeklyChart: React.FC<WeeklyChartProps> = ({ data, dailyGoalKg }) =
   }
 
   // Custom tooltips inside the chart
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
-      const total = payload.reduce((sum: number, entry: any) => sum + entry.value, 0);
+      const total = payload.reduce((sum: number, entry: TooltipPayload) => sum + entry.value, 0);
       return (
         <div className="glass-panel-l2 bg-white/95 p-4 rounded-2xl shadow-lg border border-[#edf2eb] text-[#1b261a] text-xs select-none">
           <p className="font-black mb-2 text-[#1b261a] font-display">{label}</p>
@@ -173,4 +185,6 @@ export const WeeklyChart: React.FC<WeeklyChartProps> = ({ data, dailyGoalKg }) =
       </ResponsiveContainer>
     </div>
   );
-};
+});
+
+WeeklyChart.displayName = 'WeeklyChart';

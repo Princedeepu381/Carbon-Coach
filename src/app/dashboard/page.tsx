@@ -1,7 +1,7 @@
 // src/app/dashboard/page.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -160,10 +160,14 @@ function DashboardContent() {
     { category: "shopping", label: "+ Log Purchases", color: "hover:border-pink-500/50 hover:text-pink-700", icon: "🛍" },
   ];
 
-  // Derive active mood and map to claymorphism style profiles
-  const state = computeWorldState(todayEmissions, weeklyGoal);
+  // Derive active mood and map to claymorphism style profiles (memoized for performance)
+  const state = useMemo(() =>
+    computeWorldState(todayEmissions, weeklyGoal),
+    [todayEmissions, weeklyGoal]
+  );
 
-  const getCardStyle = (mood: string) => {
+  const cardStyle = useMemo(() => {
+    const mood = state.mood;
     switch (mood) {
       case "thriving":
         return {
@@ -227,9 +231,7 @@ function DashboardContent() {
           emissionLevel: "critical" as const,
         };
     }
-  };
-
-  const cardStyle = getCardStyle(state.mood);
+  }, [state.mood]);
 
   return (
     <div className="flex flex-col gap-6 w-full text-[#1b261a]">
