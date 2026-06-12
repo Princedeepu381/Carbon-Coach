@@ -22,24 +22,13 @@ export default function LeaderboardPage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Removed profile switching for security - users cannot switch to other profiles
   const handleRowClick = (name: string) => {
-    if (name.includes("Vikram Malhotra")) {
-      localStorage.setItem("carboncoach_user_id", "vikram-user-id");
-      localStorage.setItem("carboncoach_user_name", "Vikram Malhotra");
-      localStorage.setItem("carboncoach_weekly_goal", "42");
+    // Only allow viewing own profile
+    if (name.includes("You") || name.includes(userName)) {
       router.push("/dashboard");
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
-    } else if (name.includes("Priya Sharma") || name.includes("You")) {
-      localStorage.setItem("carboncoach_user_id", "demo-user-id");
-      localStorage.setItem("carboncoach_user_name", "Priya Sharma");
-      localStorage.setItem("carboncoach_weekly_goal", "42");
-      router.push("/dashboard");
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
     }
+    // Clicking other users does nothing - proper authentication required
   };
 
   // Mock global leaderboard sorted by reduction %
@@ -151,14 +140,15 @@ export default function LeaderboardPage() {
             </thead>
             <tbody className="divide-y divide-[#edf2eb] text-xs text-[#1b261a]">
               {currentList.map((user) => {
-                const isInteractive = user.name.includes("Vikram Malhotra") || user.isSelf;
+                // Only allow clicking on own profile for security
+                const isInteractive = user.isSelf;
                 return (
                   <tr
                     key={user.rank}
                     onClick={() => isInteractive && handleRowClick(user.name)}
                     role={isInteractive ? "button" : undefined}
                     tabIndex={isInteractive ? 0 : undefined}
-                    aria-label={isInteractive ? `Select user profile ${user.name}` : undefined}
+                    aria-label={isInteractive ? `View your profile` : undefined}
                     onKeyDown={(e) => {
                       if (isInteractive && (e.key === "Enter" || e.key === " ")) {
                         e.preventDefault();
@@ -191,7 +181,6 @@ export default function LeaderboardPage() {
                       </div>
                       <span className={user.isSelf ? "text-[#1e4620] font-black" : "text-[#1b261a]"}>
                         {user.name}
-                        {isInteractive && !user.isSelf && <span className="text-[9px] ml-1.5 opacity-60 font-bold bg-red-100 text-red-800 border border-red-200 px-1.5 py-0.5 rounded-full uppercase tracking-wider">Click to Switch Profile</span>}
                       </span>
                     </td>
 

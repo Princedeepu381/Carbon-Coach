@@ -59,11 +59,9 @@ export const AnimatedProgress: React.FC<AnimatedProgressProps> = ({
         <motion.div
           className="h-full rounded-full relative overflow-hidden"
           style={{
+            width: smoothProgress,
             background: `linear-gradient(90deg, ${colors.from}, ${colors.to})`,
           }}
-          initial={{ width: 0 }}
-          animate={{ width: smoothProgress.get() + "%" }}
-          transition={{ duration: 1, ease: "easeOut" }}
         >
           {/* Shimmer effect */}
           <motion.div
