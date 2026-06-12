@@ -164,11 +164,30 @@ Daily CO₂ / Daily Goal = Ratio
 
 ## 🔒 Security & Performance Considerations
 
+### Security Enhancements
 - **Robust Input Validation:** Strictly enforced using Zod schemas on both frontend forms and backend API routes.
-- **In-Memory Rate Limiting:** Implemented a robust rate limiter (`src/lib/rateLimit.ts`) protecting backend endpoints `/api/*` (activities, nudge, streaks, world) from API abuse and excessive Gemini API calls. Logs IP-based request limits (10 requests/minute) and automatically purges old records every 5 minutes.
-- **Client Render Optimizations:** Resolved React Hook dependency (`react-hooks/exhaustive-deps`) warnings inside page routes and custom forms to prevent unnecessary rendering passes.
+- **In-Memory Rate Limiting:** Implemented a robust rate limiter (`src/lib/rateLimit.ts`) protecting backend endpoints `/api/*` (activities, nudge, streaks, world) from API abuse and excessive Gemini API calls. Logs IP-based request limits (30 requests/minute) and automatically purges old records every 5 minutes.
+- **Content Security Policy (CSP):** Comprehensive CSP headers implemented to prevent XSS attacks and unauthorized resource loading.
+- **CORS Configuration:** Proper CORS headers configured for API routes with origin validation.
+- **Security Headers:** X-Frame-Options, X-Content-Type-Options, Strict-Transport-Security, X-XSS-Protection, and X-DNS-Prefetch-Control headers enabled.
 - **SQL Injection Prevention:** Structured queries handled exclusively via Prisma ORM.
 - **Environment Separation:** API keys and database parameters separated into `.env` configurations.
+
+### Performance Optimizations
+- **Database Query Optimization:** Eliminated N+1 query problems by batching database operations. Single queries fetch all weekly data instead of 7 separate queries.
+- **Parallel Processing:** Database upsert operations execute in parallel using `Promise.all()` for faster response times.
+- **Data Reuse:** Weekly activities fetched once and reused for both chart generation and AI insights.
+- **Optimized Image Loading:** Next.js Image component with AVIF/WebP formats, proper sizing, and lazy loading.
+- **Production Build Optimization:** Minification, tree-shaking, and code splitting enabled.
+- **Client Render Optimizations:** Resolved React Hook dependency warnings to prevent unnecessary rendering passes.
+- **Zero Console Logs:** All debug console statements removed from production code for cleaner execution.
+
+### Accessibility Features
+- **ARIA Labels:** Comprehensive ARIA labels on all interactive elements for screen reader support.
+- **Semantic HTML:** Proper use of nav, section, role, and aria-label attributes.
+- **Keyboard Navigation:** Full keyboard accessibility for all interactive components.
+- **Alt Text:** Descriptive alt text for all images and decorative elements marked with aria-hidden.
+- **Tab Management:** Proper tab roles and aria-selected states for interactive previews.
 
 ## ☁️ Google Cloud Deployment (Cloud Run)
 
@@ -256,7 +275,7 @@ MIT License - See LICENSE file for details
 
 ## 👨‍💻 Author
 
-Built with ❤️ by Princedeepu381 for the AI Hackathon 2026
+Built with ❤️ DEEPAK M for the PROMPTWARS VIRTUAL CHALLENGE 3 2026
 
 ## 🙏 Acknowledgments
 

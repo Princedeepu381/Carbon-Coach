@@ -38,20 +38,26 @@ export default function LandingPage() {
       <ParallaxBackground />
 
       {/* Top Navbar */}
-      <nav className="w-full flex justify-between items-center px-6 md:px-16 py-5 sticky top-0 z-50 bg-[#e4eee1]/80 backdrop-blur-md border-b border-[#dbe7d7] shadow-[0_2px_12px_rgba(45,90,40,0.04)]">
-        <div className="font-display text-xl text-primary flex items-center gap-2 prismatic-text font-extrabold tracking-tight">
-          🌱 CarbonCoach
+      <nav
+        className="w-full flex justify-between items-center px-6 md:px-16 py-5 sticky top-0 z-50 bg-[#e4eee1]/80 backdrop-blur-md border-b border-[#dbe7d7] shadow-[0_2px_12px_rgba(45,90,40,0.04)]"
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        <div className="font-display text-xl text-primary flex items-center gap-2 prismatic-text font-extrabold tracking-tight" role="banner">
+          <span aria-label="Plant emoji">🌱</span> CarbonCoach
         </div>
         <div className="flex items-center gap-3 sm:gap-6">
           <Link
             href="/login"
             className="text-xs sm:text-sm font-bold text-on-surface-variant hover:text-primary transition-colors"
+            aria-label="Log in to your account"
           >
             Log In
           </Link>
           <Link
             href="/signup"
             className="px-3.5 py-2 sm:px-5 sm:py-2.5 clay-btn clay-btn-secondary text-[10px] sm:text-xs uppercase tracking-wider font-display"
+            aria-label="Sign up for free account"
           >
             <span className="hidden sm:inline">Start for free</span>
             <span className="sm:hidden">Start</span>
@@ -60,7 +66,10 @@ export default function LandingPage() {
       </nav>
 
       {/* Section 1: Hero - Journey Begins */}
-      <section className="min-h-screen flex flex-col items-center justify-center px-6 md:px-16 pt-12 pb-16 relative z-10">
+      <section
+        className="min-h-screen flex flex-col items-center justify-center px-6 md:px-16 pt-12 pb-16 relative z-10"
+        aria-label="Hero section"
+      >
         <AnimatedClouds />
         <FloatingLeaves />
 
@@ -100,16 +109,18 @@ export default function LandingPage() {
               <Link
                 href="/signup"
                 className="w-full sm:w-auto px-8 py-4 text-sm font-black clay-btn clay-btn-primary flex items-center justify-center gap-2 active:scale-95"
+                aria-label="Start your carbon tracking journey"
               >
                 Start Your Journey
-                <ArrowRight className="w-5 h-5 stroke-[3]" />
+                <ArrowRight className="w-5 h-5 stroke-[3]" aria-hidden="true" />
               </Link>
               <Link
                 href="#story"
                 className="w-full sm:w-auto px-8 py-4 text-sm font-bold clay-btn clay-btn-secondary active:scale-95 flex items-center justify-center gap-2"
+                aria-label="Learn how CarbonCoach works"
               >
                 See How It Works
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4" aria-hidden="true" />
               </Link>
             </motion.div>
           </motion.div>
@@ -259,7 +270,7 @@ export default function LandingPage() {
             className="glass-panel-l2 bg-[#f1f6f0] rounded-[32px] p-6 md:p-8 border border-white/80 shadow-lg"
           >
             {/* Profile Selection Tabs */}
-            <div className="flex justify-center gap-4 mb-6">
+            <div className="flex justify-center gap-4 mb-6" role="tablist" aria-label="Emission level preview">
               <button
                 onClick={() => setPreviewType("thriving")}
                 className={`px-5 py-2.5 rounded-full text-xs font-black transition-all flex items-center gap-2 select-none ${
@@ -267,8 +278,12 @@ export default function LandingPage() {
                     ? "bg-[#e3f2e4] text-[#1e4620] shadow-[inset_1px_1px_2px_rgba(255,255,255,0.8)] border border-[#366a32]/30 scale-105"
                     : "bg-white/80 text-[#3d4f3b] border border-white/60 hover:bg-[#e3f2e4]/40"
                 }`}
+                role="tab"
+                aria-selected={previewType === "thriving"}
+                aria-controls="world-preview"
+                aria-label="Show low emission world preview"
               >
-                🌱 Low Emission
+                <span aria-hidden="true">🌱</span> Low Emission
               </button>
               <button
                 onClick={() => setPreviewType("critical")}
@@ -277,13 +292,17 @@ export default function LandingPage() {
                     ? "bg-[#fee2e2] text-[#7f1d1d] shadow-[inset_1px_1px_2px_rgba(255,255,255,0.8)] border border-[#c22e2e]/30 scale-105"
                     : "bg-white/80 text-[#3d4f3b] border border-white/60 hover:bg-[#fee2e2]/40"
                 }`}
+                role="tab"
+                aria-selected={previewType === "critical"}
+                aria-controls="world-preview"
+                aria-label="Show high emission world preview"
               >
-                ⚠️ High Emission
+                <span aria-hidden="true">⚠️</span> High Emission
               </button>
             </div>
 
             {/* World Preview */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center" id="world-preview" role="tabpanel">
               <div className="lg:col-span-7 rounded-[20px] overflow-hidden border border-white/60 shadow-inner relative group h-64 md:h-80">
                 <MotionImage
                   key={previewType}

@@ -42,8 +42,41 @@ export async function GET(req: Request) {
     startOf7Days.setDate(now.getDate() - 6);
     startOf7Days.setHours(0, 0, 0, 0);
 
-    // Get or create snapshots for the last 7 days
+    // Fetch all activities for the last 7 days in a single query (optimized)
+    const endOf7Days = new Date();
+    endOf7Days.setHours(23, 59, 59, 999);
+
+    const allActivities = await prisma.activity.findMany({
+      where: {
+        userId,
+        loggedAt: {
+          gte: startOf7Days,
+          lte: endOf7Days,
+        },
+      },
+      select: {
+        co2Kg: true,
+        loggedAt: true,
+      },
+    });
+
+    // Fetch existing snapshots in a single query
+    const existingSnapshots = await prisma.worldSnapshot.findMany({
+      where: {
+        userId,
+        snapshotDate: {
+          gte: startOf7Days,
+        },
+      },
+    });
+
+    const snapshotMap = new Map(
+      existingSnapshots.map(s => [s.snapshotDate.getTime(), s])
+    );
+
+    // Process each day and batch upsert operations
     const snapshots = [];
+    const upsertOperations = [];
     
     for (let i = 0; i < 7; i++) {
       const date = new Date(startOf7Days);
@@ -53,67 +86,58 @@ export async function GET(req: Request) {
       const endOfDay = new Date(date);
       endOfDay.setHours(23, 59, 59, 999);
 
-      // Get activities for this day
-      const dayActivities = await prisma.activity.findMany({
-        where: {
-          userId,
-          loggedAt: {
-            gte: date,
-            lte: endOfDay,
-          },
-        },
+      // Filter activities for this day from the already fetched data
+      const dayActivities = allActivities.filter(act => {
+        const actDate = new Date(act.loggedAt);
+        return actDate >= date && actDate <= endOfDay;
       });
 
       const totalCo2 = dayActivities.reduce((sum, act) => sum + act.co2Kg, 0);
       const worldState = computeWorldState(totalCo2, weeklyGoalKg);
 
-      // Try to find existing snapshot
-      let snapshot = await prisma.worldSnapshot.findUnique({
-        where: {
-          userId_snapshotDate: {
-            userId,
-            snapshotDate: date,
-          },
-        },
-      });
+      // Check if snapshot exists
+      const existingSnapshot = snapshotMap.get(date.getTime());
 
-      // Create or update snapshot
-      if (!snapshot) {
-        snapshot = await prisma.worldSnapshot.create({
-          data: {
-            userId,
-            snapshotDate: date,
-            totalCo2Kg: totalCo2,
-            treeCount: worldState.trees,
-            skyPollution: worldState.skyPollution,
-            worldMood: worldState.mood,
-          },
-        });
-      } else {
-        // Update if data has changed
-        snapshot = await prisma.worldSnapshot.update({
-          where: {
-            userId_snapshotDate: {
+      if (!existingSnapshot) {
+        upsertOperations.push(
+          prisma.worldSnapshot.create({
+            data: {
               userId,
               snapshotDate: date,
+              totalCo2Kg: totalCo2,
+              treeCount: worldState.trees,
+              skyPollution: worldState.skyPollution,
+              worldMood: worldState.mood,
             },
-          },
-          data: {
-            totalCo2Kg: totalCo2,
-            treeCount: worldState.trees,
-            skyPollution: worldState.skyPollution,
-            worldMood: worldState.mood,
-            computedAt: new Date(),
-          },
-        });
+          })
+        );
+      } else {
+        upsertOperations.push(
+          prisma.worldSnapshot.update({
+            where: {
+              userId_snapshotDate: {
+                userId,
+                snapshotDate: date,
+              },
+            },
+            data: {
+              totalCo2Kg: totalCo2,
+              treeCount: worldState.trees,
+              skyPollution: worldState.skyPollution,
+              worldMood: worldState.mood,
+              computedAt: new Date(),
+            },
+          })
+        );
       }
-
-      snapshots.push(snapshot);
     }
+
+    // Execute all upsert operations in parallel
+    const results = await Promise.all(upsertOperations);
+    snapshots.push(...results);
 
     return NextResponse.json({ snapshots });
   } catch (error) {
-    console.error("GET world error:", error);
     return NextResponse.json(
       { error: "Failed to fetch world data" },
       { status: 500 }

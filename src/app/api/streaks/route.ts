@@ -36,7 +36,6 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ streaks });
   } catch (error) {
-    console.error("GET streaks error:", error);
     return NextResponse.json(
       { error: "Failed to fetch streaks" },
       { status: 500 }
@@ -136,7 +135,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json(newStreak);
   } catch (error) {
-    console.error("POST streak error:", error);
     return NextResponse.json(
       { error: "Failed to update streak" },
       { status: 500 }

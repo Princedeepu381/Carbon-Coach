@@ -76,14 +76,12 @@ export async function getAiNudge(
       lastError = error;
       const is404 = error?.status === 404 || error?.message?.includes("404") || error?.message?.includes("not found");
       if (is404) {
-        console.warn(`Model ${modelName} not found/supported, trying next model...`);
         continue;
       }
       break;
     }
   }
 
-  console.error("Gemini API error (all models failed), falling back to mock nudge:", lastError);
   return getMockNudge(category, subType, quantity, unit);
 }
 
@@ -114,14 +112,12 @@ export async function getWeeklyInsight(activities: any[]): Promise<string> {
       lastError = error;
       const is404 = error?.status === 404 || error?.message?.includes("404") || error?.message?.includes("not found");
       if (is404) {
-        console.warn(`Model ${modelName} not found/supported, trying next model...`);
         continue;
       }
       break;
     }
   }
 
-  console.error("Gemini API error (all models failed), falling back to mock insight:", lastError);
   return getMockWeeklyInsight(activities);
 }
 

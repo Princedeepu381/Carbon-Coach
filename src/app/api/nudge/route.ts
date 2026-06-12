@@ -75,7 +75,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json(nudgeResult);
   } catch (error) {
-    console.error("POST nudge error:", error);
     return NextResponse.json(
       { error: "Failed to generate nudge" },
       { status: 500 }

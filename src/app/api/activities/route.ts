@@ -42,10 +42,30 @@ export async function GET(req: Request) {
     });
     const weeklyGoalKg = user?.weeklyGoalKg || 50.0;
 
-    // 3. Compile last 7 days of daily carbon totals for Recharts
+    // 3. Compile last 7 days of daily carbon totals for Recharts (optimized single query)
     const weeklyData = [];
     const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    
+    const startOf7Days = new Date();
+    startOf7Days.setDate(now.getDate() - 6);
+    startOf7Days.setHours(0, 0, 0, 0);
 
+    // Fetch all activities for the last 7 days in a single query
+    const allWeekActivities = await prisma.activity.findMany({
+      where: {
+        userId,
+        loggedAt: {
+          gte: startOf7Days,
+        },
+      },
+      select: {
+        category: true,
+        co2Kg: true,
+        loggedAt: true,
+      },
+    });
+
+    // Group activities by day
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(now.getDate() - i);
@@ -56,16 +76,6 @@ export async function GET(req: Request) {
       const end = new Date(d);
       end.setHours(23, 59, 59, 999);
 
-      const dayActs = await prisma.activity.findMany({
-        where: {
-          userId,
-          loggedAt: {
-            gte: start,
-            lte: end,
-          },
-        },
-      });
-
       const categoryTotals: Record<string, number> = {
         transport: 0,
         food: 0,
@@ -73,10 +83,13 @@ export async function GET(req: Request) {
         shopping: 0,
       };
 
-      dayActs.forEach((act) => {
-        const cat = act.category;
-        if (cat in categoryTotals) {
-          categoryTotals[cat] = parseFloat((categoryTotals[cat] + act.co2Kg).toFixed(2));
+      allWeekActivities.forEach((act) => {
+        const actDate = new Date(act.loggedAt);
+        if (actDate >= start && actDate <= end) {
+          const cat = act.category;
+          if (cat in categoryTotals) {
+            categoryTotals[cat] = parseFloat((categoryTotals[cat] + act.co2Kg).toFixed(2));
+          }
         }
       });
 
@@ -89,17 +102,8 @@ export async function GET(req: Request) {
       });
     }
 
-    // 4. Fetch last 7 days of logs to pass to Gemini
-    const startOf7Days = new Date();
-    startOf7Days.setDate(now.getDate() - 7);
-    const weeklyActivities = await prisma.activity.findMany({
-      where: {
-        userId,
-        loggedAt: {
-          gte: startOf7Days,
-        },
-      },
-    });
+    // 4. Use already fetched weekly activities for Gemini (reuse data)
+    const weeklyActivities = allWeekActivities;
 
     // Generate AI Insight
     const insight = await getWeeklyInsight(weeklyActivities);
@@ -117,7 +121,6 @@ export async function GET(req: Request) {
       streak: streak?.currentStreak || 4,
     });
   } catch (error) {
-    console.error("GET activities error:", error);
     return NextResponse.json({ error: "Failed to fetch activities" }, { status: 500 });
   }
 }
@@ -265,7 +268,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json(activity);
   } catch (error) {
-    console.error("POST activity error:", error);
     return NextResponse.json({ error: "Failed to record activity" }, { status: 500 });
   }
 }
@@ -326,7 +328,6 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("DELETE activity error:", error);
     return NextResponse.json({ error: "Failed to delete activity" }, { status: 500 });
   }
 }
