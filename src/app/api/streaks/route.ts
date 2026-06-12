@@ -28,6 +28,7 @@ export async function GET(req: Request) {
   }
 
   try {
+    const { userId } = validationResult.data;
     const streaks = await prisma.streak.findMany({
       where: { userId },
       orderBy: { lastUpdated: "desc" },

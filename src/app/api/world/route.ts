@@ -29,6 +29,7 @@ export async function GET(req: Request) {
   }
 
   try {
+    const { userId } = validationResult.data;
     // Fetch user's weekly goal
     const user = await prisma.user.findUnique({
       where: { id: userId },
