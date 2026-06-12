@@ -30,11 +30,6 @@ export async function GET(req: Request) {
 
   try {
     const { userId } = validationResult.data;
-    // Fetch user's weekly goal
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-    const weeklyGoalKg = user?.weeklyGoalKg || 50.0;
 
     // Fetch last 7 days of world snapshots
     const now = new Date();
@@ -42,33 +37,38 @@ export async function GET(req: Request) {
     startOf7Days.setDate(now.getDate() - 6);
     startOf7Days.setHours(0, 0, 0, 0);
 
-    // Fetch all activities for the last 7 days in a single query (optimized)
     const endOf7Days = new Date();
     endOf7Days.setHours(23, 59, 59, 999);
 
-    const allActivities = await prisma.activity.findMany({
-      where: {
-        userId,
-        loggedAt: {
-          gte: startOf7Days,
-          lte: endOf7Days,
+    // Fetch user, activities, and existing snapshots in parallel
+    const [user, allActivities, existingSnapshots] = await Promise.all([
+      prisma.user.findUnique({
+        where: { id: userId },
+      }),
+      prisma.activity.findMany({
+        where: {
+          userId,
+          loggedAt: {
+            gte: startOf7Days,
+            lte: endOf7Days,
+          },
         },
-      },
-      select: {
-        co2Kg: true,
-        loggedAt: true,
-      },
-    });
+        select: {
+          co2Kg: true,
+          loggedAt: true,
+        },
+      }),
+      prisma.worldSnapshot.findMany({
+        where: {
+          userId,
+          snapshotDate: {
+            gte: startOf7Days,
+          },
+        },
+      }),
+    ]);
 
-    // Fetch existing snapshots in a single query
-    const existingSnapshots = await prisma.worldSnapshot.findMany({
-      where: {
-        userId,
-        snapshotDate: {
-          gte: startOf7Days,
-        },
-      },
-    });
+    const weeklyGoalKg = user?.weeklyGoalKg || 50.0;
 
     const snapshotMap = new Map(
       existingSnapshots.map(s => [s.snapshotDate.getTime(), s])

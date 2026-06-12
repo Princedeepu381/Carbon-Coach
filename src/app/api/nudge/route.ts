@@ -55,7 +55,7 @@ export async function POST(req: Request) {
     });
 
     // Aggregate weekly pattern by category
-    const weeklyPattern = weeklyActivities.reduce((acc: any, act) => {
+    const weeklyPattern = weeklyActivities.reduce<Record<string, { count: number; totalCo2: number }>>((acc, act) => {
       if (!acc[act.category]) {
         acc[act.category] = { count: 0, totalCo2: 0 };
       }

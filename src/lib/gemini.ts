@@ -85,10 +85,16 @@ export async function getAiNudge(
   return getMockNudge(category, subType, quantity, unit);
 }
 
+export interface MinimalActivity {
+  category: string;
+  co2Kg: number;
+  loggedAt?: Date | string;
+}
+
 /**
  * Generates a warm weekly carbon summary and recommendation.
  */
-export async function getWeeklyInsight(activities: any[]): Promise<string> {
+export async function getWeeklyInsight(activities: MinimalActivity[]): Promise<string> {
   if (!genAI) {
     return getMockWeeklyInsight(activities);
   }
@@ -185,7 +191,7 @@ function getMockNudge(category: string, subType: string, quantity: number, unit:
   };
 }
 
-function getMockWeeklyInsight(activities: any[]): string {
+function getMockWeeklyInsight(activities: MinimalActivity[]): string {
   if (!activities || activities.length === 0) {
     return "Welcome to CarbonCoach! Start logging your daily transport, meals, and energy usage to see personalized carbon insights here.";
   }

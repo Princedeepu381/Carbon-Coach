@@ -13,17 +13,26 @@ import { AnimatedCard, CountingBadge } from "@/components/Animated";
 import { useCountUp } from "@/lib/animations/hooks";
 import { TreePine, Waves, CloudSun, Calendar, HelpCircle, ArrowLeftRight, ZoomIn, ZoomOut } from "lucide-react";
 
+interface WorldSnapshotType {
+  snapshotDate: string;
+  totalCo2Kg: number;
+  treeCount: number;
+  skyPollution?: number;
+  worldMood?: string;
+  computedAt?: string;
+}
+
 export default function MyWorldPage() {
   const [userId, setUserId] = useState<string>("demo-user-id");
   const [weeklyGoal, setWeeklyGoal] = useState<number>(42);
   
   // Historical data states
-  const [snapshots, setSnapshots] = useState<any[]>([]);
+  const [snapshots, setSnapshots] = useState<WorldSnapshotType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   
   // Scrubber / Selection state
   const [scrubberVal, setScrubberVal] = useState<number>(6);
-  const [selectedSnapshot, setSelectedSnapshot] = useState<any>(null);
+  const [selectedSnapshot, setSelectedSnapshot] = useState<WorldSnapshotType | null>(null);
 
   // Tooltip highlights
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);

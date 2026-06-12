@@ -18,12 +18,31 @@ import {
   Download,
 } from "lucide-react";
 
+interface InsightsData {
+  weeklyTotal: number;
+  categoryTotals: {
+    transport: number;
+    food: number;
+    energy: number;
+    shopping: number;
+  };
+  aiInsight: string;
+  streak: number;
+}
+
+interface WeeklyDayData {
+  transport: number;
+  food: number;
+  energy: number;
+  shopping: number;
+}
+
 export default function InsightsPage() {
   const [userId, setUserId] = useState<string>("demo-user-id");
   const [userName, setUserName] = useState<string>("Priya Sharma");
   const [weeklyGoal, setWeeklyGoal] = useState<number>(42);
   const [loading, setLoading] = useState<boolean>(true);
-  const [insights, setInsights] = useState<any>(null);
+  const [insights, setInsights] = useState<InsightsData | null>(null);
 
   const { start: startWeekly, formattedCount: weeklyFormattedCount } = useCountUp(insights?.weeklyTotal || 0, { duration: 2000, decimals: 1 });
   const { start: startDaily, formattedCount: dailyFormattedCount } = useCountUp(insights?.weeklyTotal ? insights.weeklyTotal / 7 : 0, { duration: 2000, decimals: 1 });
@@ -58,16 +77,16 @@ export default function InsightsPage() {
       
       if (res.ok) {
         const weeklyTotal = data.weeklyData?.reduce(
-          (sum: number, day: any) =>
+          (sum: number, day: WeeklyDayData) =>
             sum + day.transport + day.food + day.energy + day.shopping,
           0
         ) || 0;
 
         const categoryTotals = {
-          transport: data.weeklyData?.reduce((sum: number, day: any) => sum + day.transport, 0) || 0,
-          food: data.weeklyData?.reduce((sum: number, day: any) => sum + day.food, 0) || 0,
-          energy: data.weeklyData?.reduce((sum: number, day: any) => sum + day.energy, 0) || 0,
-          shopping: data.weeklyData?.reduce((sum: number, day: any) => sum + day.shopping, 0) || 0,
+          transport: data.weeklyData?.reduce((sum: number, day: WeeklyDayData) => sum + day.transport, 0) || 0,
+          food: data.weeklyData?.reduce((sum: number, day: WeeklyDayData) => sum + day.food, 0) || 0,
+          energy: data.weeklyData?.reduce((sum: number, day: WeeklyDayData) => sum + day.energy, 0) || 0,
+          shopping: data.weeklyData?.reduce((sum: number, day: WeeklyDayData) => sum + day.shopping, 0) || 0,
         };
 
         setInsights({

@@ -59,7 +59,7 @@ export const WeeklyChart: React.FC<WeeklyChartProps> = memo(({ data, dailyGoalKg
         <div className="glass-panel-l2 bg-white/95 p-4 rounded-2xl shadow-lg border border-[#edf2eb] text-[#1b261a] text-xs select-none">
           <p className="font-black mb-2 text-[#1b261a] font-display">{label}</p>
           <div className="flex flex-col gap-1.5 mb-2">
-            {payload.map((entry: any, index: number) => (
+            {payload.map((entry: TooltipPayload, index: number) => (
               <div key={index} className="flex justify-between gap-6 items-center">
                 <span className="flex items-center gap-1.5">
                   <span

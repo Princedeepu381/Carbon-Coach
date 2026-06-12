@@ -60,7 +60,9 @@ export const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) 
           setStreakCount(data.streak);
         }
       })
-      .catch((err) => console.error("Streak sync error:", err));
+      .catch((err) => {
+        // Failed to sync streak count
+      });
   }, [pathname]);
 
   const handleLogout = () => {
@@ -141,16 +143,13 @@ export const NavigationLayout: React.FC<NavigationLayoutProps> = ({ children }) 
               <HelpIcon className="w-4 h-4" />
               <span>Help Center</span>
             </Link>
-            <Link
-              href="/"
-              onClick={() => {
-                localStorage.removeItem("carboncoach_user_name");
-              }}
-              className="flex items-center gap-4 px-4 py-2.5 rounded-lg text-xs font-semibold text-red-600 hover:text-red-500 opacity-80 hover:opacity-100 transition-all"
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-4 px-4 py-2.5 rounded-lg text-xs font-semibold text-red-600 hover:text-red-500 opacity-80 hover:opacity-100 transition-all w-full text-left"
             >
               <LogoutIcon className="w-4 h-4" />
               <span>Sign Out</span>
-            </Link>
+            </button>
           </div>
         </div>
       </aside>

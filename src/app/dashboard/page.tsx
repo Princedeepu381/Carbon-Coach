@@ -35,6 +35,28 @@ import {
   PlusCircle,
 } from "lucide-react";
 
+interface Activity {
+  id: string;
+  userId: string;
+  category: string;
+  subType: string;
+  quantity: number;
+  unit: string;
+  co2Kg: number;
+  loggedAt: string | Date;
+  nudgeShown: boolean;
+  nudgeAccepted: boolean;
+}
+
+interface WeeklyDayData {
+  date: string;
+  day?: string;
+  transport: number;
+  food: number;
+  energy: number;
+  shopping: number;
+}
+
 function DashboardContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -46,8 +68,8 @@ function DashboardContent() {
 
   // Data states
   const [todayEmissions, setTodayEmissions] = useState<number>(0);
-  const [activities, setActivities] = useState<any[]>([]);
-  const [weeklyData, setWeeklyData] = useState<any[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [weeklyData, setWeeklyData] = useState<WeeklyDayData[]>([]);
   const [insight, setInsight] = useState<string>("Analyzing your carbon trends...");
   const [streakCount, setStreakCount] = useState<number>(4);
 
@@ -59,30 +81,17 @@ function DashboardContent() {
   const { start: startEmissions, formattedCount: emissionsFormattedCount } = useCountUp(todayEmissions, { duration: 2000, decimals: 1 });
   const { start: startStreak, formattedCount: streakFormattedCount } = useCountUp(streakCount, { duration: 1500, decimals: 0 });
 
-  // Load session & fetch initial data
-  useEffect(() => {
-    const savedId = localStorage.getItem("carboncoach_user_id") || "demo-user-id";
-    const savedName = localStorage.getItem("carboncoach_user_name") || "Priya Sharma";
-    const savedGoal = parseFloat(localStorage.getItem("carboncoach_weekly_goal") || "42");
-    
-    setUserId(savedId);
-    setUserName(savedName);
-    setWeeklyGoal(savedGoal);
-
-    // Sync modal query parameter
-    if (searchParams.get("openLog") === "true") {
-      setIsLogOpen(true);
-    }
-
-    fetchDashboardData(savedId, savedGoal);
-  }, [searchParams, fetchDashboardData]);
-
-  useEffect(() => {
-    if (statsInView) {
-      startEmissions();
-      startStreak();
-    }
-  }, [statsInView, startEmissions, startStreak]);
+  const generateDemoWeeklyData = useCallback(() => {
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return days.map((day, i) => ({
+      date: day,
+      day,
+      transport: 1.5 + Math.random() * 2,
+      food: 1.0 + Math.random() * 1.5,
+      energy: 0.8 + Math.random() * 1.2,
+      shopping: 0.3 + Math.random() * 0.7,
+    }));
+  }, []);
 
   const fetchDashboardData = useCallback(async (uid: string, goal: number) => {
     try {
@@ -114,18 +123,32 @@ function DashboardContent() {
       setInsight("Welcome to CarbonCoach! Log your first activity to begin tracking your environmental impact.");
       setStreakCount(4);
     }
-  }, []);
+  }, [generateDemoWeeklyData]);
 
-  const generateDemoWeeklyData = () => {
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return days.map((day, i) => ({
-      day,
-      transport: 1.5 + Math.random() * 2,
-      food: 1.0 + Math.random() * 1.5,
-      energy: 0.8 + Math.random() * 1.2,
-      shopping: 0.3 + Math.random() * 0.7,
-    }));
-  };
+  // Load session & fetch initial data
+  useEffect(() => {
+    const savedId = localStorage.getItem("carboncoach_user_id") || "demo-user-id";
+    const savedName = localStorage.getItem("carboncoach_user_name") || "Priya Sharma";
+    const savedGoal = parseFloat(localStorage.getItem("carboncoach_weekly_goal") || "42");
+    
+    setUserId(savedId);
+    setUserName(savedName);
+    setWeeklyGoal(savedGoal);
+
+    // Sync modal query parameter
+    if (searchParams.get("openLog") === "true") {
+      setIsLogOpen(true);
+    }
+
+    fetchDashboardData(savedId, savedGoal);
+  }, [searchParams, fetchDashboardData]);
+
+  useEffect(() => {
+    if (statsInView) {
+      startEmissions();
+      startStreak();
+    }
+  }, [statsInView, startEmissions, startStreak]);
 
   const handleCloseModal = () => {
     setIsLogOpen(false);
@@ -143,7 +166,7 @@ function DashboardContent() {
         fetchDashboardData(userId, weeklyGoal);
       }
     } catch (e) {
-      console.error(e);
+      // Failed to delete activity
     }
   };
 
@@ -622,7 +645,7 @@ function DashboardContent() {
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handleDeleteActivity(act.id)}
                         aria-label={`Delete ${act.subType.replace("_", " ")} activity`}
-                        className="p-1.5 text-on-surface-variant hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all rounded-lg hover:bg-red-50"
+                        className="p-1.5 text-on-surface-variant hover:text-red-500 opacity-60 hover:opacity-100 focus:opacity-100 transition-all rounded-lg hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                       >
                         <Trash2 className="w-4 h-4" />
                       </motion.button>

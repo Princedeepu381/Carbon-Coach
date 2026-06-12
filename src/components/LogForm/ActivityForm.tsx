@@ -55,6 +55,15 @@ const SUBTYPES = {
   ],
 };
 
+interface NudgeResult {
+  co2_estimate: number;
+  alternative: string | null;
+  alternative_co2: number | null;
+  saving: number | null;
+  nudge_message: string;
+  show_nudge: boolean;
+}
+
 export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, onCancel }) => {
   const [category, setCategory] = useState<string>("transport");
   const [subType, setSubType] = useState<string>("car_petrol");
@@ -62,7 +71,7 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, o
   
   // AI Nudge States
   const [loadingNudge, setLoadingNudge] = useState<boolean>(false);
-  const [nudge, setNudge] = useState<any>(null);
+  const [nudge, setNudge] = useState<NudgeResult | null>(null);
   const [nudgeShown, setNudgeShown] = useState<boolean>(false);
   const [nudgeAccepted, setNudgeAccepted] = useState<boolean>(false);
   
@@ -108,7 +117,7 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, o
         setNudge(null);
       }
     } catch (e) {
-      console.error("Failed to load nudge:", e);
+      // Failed to load nudge
       setNudge(null);
     } finally {
       setLoadingNudge(false);
@@ -137,7 +146,7 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, o
   }, [category, subType, quantity, fetchNudge]);
 
   const handleAcceptNudge = () => {
-    if (!nudge) return;
+    if (!nudge || !nudge.alternative) return;
     setNudgeAccepted(true);
     setSubType(nudge.alternative);
     setNudge(null);
@@ -183,7 +192,7 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ userId, onSuccess, o
         alert("Failed to submit log entry. Please try again.");
       }
     } catch (err) {
-      console.error(err);
+      // Error submitting log
       alert("Error submitting log entry.");
     } finally {
       setSubmitting(false);
