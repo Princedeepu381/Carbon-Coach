@@ -1,5 +1,9 @@
 # 🌱 CarbonCoach - AI-Powered Personal Carbon Footprint Tracker
+## 🌐 Live Demo
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_Site-00C7B7?style=for-the-badge&logo=vercel&logoColor=white)](https://carbon-coach-dw9s-git-main-princedeepu381s-projects.vercel.app/)
+
+🔗 **Direct URL:** [https://carbon-coach-dw9s-git-main-princedeepu381s-projects.vercel.app/](https://carbon-coach-dw9s-git-main-princedeepu381s-projects.vercel.app/)
 ## 📋 Challenge Vertical: Sustainability & Climate Action
 
 CarbonCoach is an intelligent personal carbon footprint tracking application that gamifies sustainable living through a dynamic "Living World" visualization that responds to your daily choices.
